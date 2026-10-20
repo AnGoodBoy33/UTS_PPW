@@ -1,0 +1,9 @@
+# Atur default untuk semua file agar dinormalisasi otomatis
+* text=auto
+
+# Paksa file kode program (PHP, HTML, JS, CSS) menggunakan LF saat di-commit
+*.php text eol=lf
+*.html text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.json text eol=lf
