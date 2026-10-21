@@ -43,7 +43,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           "><br><br>
 
         <label>Password Baru:</label><br>
-        <input type="password" name="pswd" required  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}" oninvalid="this.setCustomValidity('Password tidak boleh kosong, mohon diisi!')" 
+        <input type="password" name="pswd" required  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}" 
+            oninvalid="
+             if (this.value.trim() === '') {
+              this.setCustomValidity('Password tidak boleh kosong, mohon diisi!');
+            } else if (this.validity.patternMismatch) {
+              this.setCustomValidity('Password harus minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan karakter spesial (misal: @, #, $, !)!');
+            } else {
+              this.setCustomValidity('');
+            }" 
             oninput="
             if (this.value.trim() === '') {
               this.setCustomValidity('Password tidak boleh kosong, mohon diisi!');
