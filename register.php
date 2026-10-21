@@ -1,4 +1,3 @@
-
 <?php
 $error = '';
 
@@ -41,22 +40,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Daftar Akun - Zaki.</title>
-
+    <title>Daftar Akun - Sela.</title>
     <link rel="stylesheet" href="register.css">
 </head>
 <body>
 
     <header class="topbar">
         <div class="brand">
-            <a href="index.php" class="logo">Zaki.</a>
+            <a href="login.php" class="logo">Sela.</a>
             <span class="tagline">Cerita kecil, ruang bersama.</span>
         </div>
 
@@ -71,12 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="story-top">
                 <div class="eyebrow">
                     <span class="eyebrow-line"></span>
-                    RUANG UNTUK CRT
+                    RUANG UNTUK CERITA
                 </div>
 
                 <h1>Hal sederhana<br>
                     pun layak<br>
-                    diCRTkan.</h1>
+                    diceritakan.</h1>
 
                 <p class="story-description">
                     Tentang pagi yang tenang, perjalanan pulang,
@@ -85,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="story-bottom">
-                <span class="quote-label">SEPOTONG MUANI DI Zaki</span>
+                <span class="quote-label">SEPOTONG CERITA DI SELA</span>
 
                 <blockquote>
                     “Ternyata, duduk sebentar tanpa terburu-buru
@@ -93,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </blockquote>
 
                 <p class="quote-author">
-                    Zaki Soleh · Catatan sore
+                    Nadia Putri &middot; Catatan sore
                 </p>
             </div>
         </section>
@@ -102,10 +98,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="form-heading">
                 <span class="form-eyebrow">BERKENALAN DULU, YUK</span>
-                <h2>Selamat datang di Zaki.</h2>
+                <h2>Selamat datang di Sela.</h2>
                 <p>
                     Buat akun untuk masuk dan menemukan cerita-cerita
-                    Jomok di sekitar kita.
+                    kecil di sekitar kita.
                 </p>
             </div>
 
@@ -157,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     >
 
                     <small>
-                        Gunakan minimal 8 karakter, gabungkan huruf dan angka.
+                        Gunakan minimal 8 karakter, gabungkan huruf besar, huruf kecil, angka, dan simbol.
                     </small>
                 </div>
 
@@ -177,8 +173,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </main>
 
     <footer class="footer">
-        <span>© 2026 Zaki. Ruang berbagi cerita Jomok.</span>
-        <span class="footer-quote">Ada muani di antara kita.</span>
+        <span>&copy; 2026 Sela. Ruang berbagi cerita singkat.</span>
+        <span class="footer-quote">Ada cerita di antara jeda.</span>
     </footer>
 
 </body>
