@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $dataUser = $account[$email] ?? null;
 
-    if ($dataUser !== null && $dataUser['password'] === $password) {
+    if ($dataUser !== null && password_verify($password, $dataUser['password'])) {
         $_SESSION['nama_user'] = $dataUser['nama'];
         // time() + (86400 * 30) artinya cookie ini akan disimpan di harddisk browser selama 30 HARI ke depan
          if ($rememberMe === '1') {
