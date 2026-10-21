@@ -8,16 +8,13 @@ if (isset($_SESSION['nama_user']) || isset($_COOKIE['user_ingat'])) {
     header("Location: dashboard.php");
     exit();
 }
-if (($_GET['pesan'] ?? '') === 'registrasi_sukses') {
-    echo "<p style='color: green;'>Registrasi Berhasil! Silahkan Login.</p>";
-}
-if (($_GET['pesan'] ?? '') === 'gagal') {
-    echo "<p style='color: red;'>Login Gagal! Email atau Password salah.</p>";
-}
+
+$pesan = $_GET['pesan'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = htmlspecialchars($_POST['mail'] ?? '');
-    $password = htmlspecialchars($_POST['pswd'] ?? '');
+    $email = htmlspecialchars(trim($_POST['mail'] ?? ''));
+    $password = $_POST['pswd'] ?? '';
+    $rememberMe = $_POST['remember'] ?? '';
 
     include 'database.php';
 
@@ -25,11 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($dataUser !== null && $dataUser['password'] === $password) {
         $_SESSION['nama_user'] = $dataUser['nama'];
-        // time() + (86400 * 30) artinya cookie ini akan disimpan di harddisk browser selama 30 HARI ke depan
-         if ($rememberMe === '1') {
-            // Simpan cookie selama 30 hari (86400 detik = 1 hari)
-            // Tanda "/" artinya cookie ini berlaku di seluruh halaman website
+        $_SESSION['email_user'] = $email;
+
+        if ($rememberMe === '1') {
             setcookie("user_ingat", $dataUser['nama'], time() + (86400 * 30), "/");
+            setcookie("email_ingat", $email, time() + (86400 * 30), "/");
         }
 
         header("Location: dashboard.php");
@@ -41,23 +38,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html>
-<head><title>Login Member</title></head>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk ke Sela.</title>
+    <link rel="stylesheet" href="login.css">
+</head>
 <body>
-    <h2>Formulir Login</h2>
-    <form action="login.php" method="POST">
-        <label>Email:</label><br>
-        <input type="email" name="mail" required><br><br>
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="brand-group">
+                <a href="login.php" class="brand-logo">Sela.</a>
+                <span class="brand-divider"></span>
+                <span class="brand-tagline">Cerita kecil, ruang bersama.</span>
+            </div>
+            <a href="login.php" class="back-link">&larr; Kembali ke awal</a>
+        </div>
+    </header>
 
-        <label>Password:</label><br>
-        <input type="password" name="pswd" required><br><br>
+    <main class="main-container">
+        <!-- Panel Kiri -->
+        <section class="story-panel">
+            <div class="panel-top">
+                <div class="eyebrow-with-line">RUANG UNTUK CERITA</div>
+                <h1 class="panel-title">Selalu ada ruang<br>untuk kembali.</h1>
+                <p class="panel-desc">Ambil jeda sebentar. Temukan kembali cerita-cerita kecil yang terasa dekat.</p>
+            </div>
+            <div class="panel-bottom">
+                <div class="quote-label">SEPOTONG CERITA DI SELA</div>
+                <p class="quote-text">“Ternyata, duduk sebentar tanpa terburu-buru juga bagian dari menjalani hari.”</p>
+                <div class="quote-author">Nadia Putri &middot; Catatan sore</div>
+            </div>
+        </section>
 
-        <input type="checkbox" name="remember" value="1" id="remember">
-        <label for="remember">Ingat Saya (Remember Me)</label><br><br>
+        <!-- Form Login Kanan -->
+        <section class="form-section">
+            <div class="form-eyebrow">SENANG BERTEMU LAGI</div>
+            <h2 class="form-title">Masuk ke Sela.</h2>
+            <p class="form-subtitle">Gunakan email dan kata sandimu.<br>Cerita-cerita kecil menanti di dalam.</p>
 
-        <input type="submit" value="Masuk">
-    </form>
-    <br>
-    <a href="register.php">Belum punya akun? Daftar</a>
+            <?php if ($pesan === 'registrasi_sukses'): ?>
+                <div class="alert-box alert-success">Registrasi Berhasil! Silahkan Login.</div>
+            <?php elseif ($pesan === 'gagal'): ?>
+                <div class="alert-box alert-error">Login Gagal! Email atau Password salah.</div>
+            <?php endif; ?>
+
+            <form action="login.php" method="POST">
+                <div class="form-group">
+                    <label for="mail">Email</label>
+                    <input type="email" id="mail" name="mail" placeholder="nama@contoh.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="pswd">Kata sandi</label>
+                    <input type="password" id="pswd" name="pswd" placeholder="Masukkan kata sandi" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Masuk</button>
+            </form>
+
+            <p class="form-note">Setelah masuk, kamu akan tiba di ruang ceritamu.</p>
+            <p class="register-prompt">Belum punya akun? <a href="register.php">Daftar</a></p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <span>&copy; 2026 Sela. Ruang berbagi cerita singkat.</span>
+            <span class="footer-quote">Ada cerita di antara jeda.</span>
+        </div>
+    </footer>
 </body>
 </html>

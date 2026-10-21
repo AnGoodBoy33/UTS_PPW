@@ -10,4 +10,9 @@ $account = array (
     'nama' => 'John Calvin',
     'password' => '123',
   ),
+  'kawaiipokemann@gmail.com' => 
+  array (
+    'nama' => 'Justin Melvino',
+    'password' => 'Etpr0f_kommas',
+  ),
 );

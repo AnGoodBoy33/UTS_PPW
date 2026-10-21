@@ -1,0 +1,361 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f7f6f1;
+    color: #26312a;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Header / Navbar */
+.site-header {
+    border-bottom: 1px solid #e4e3dc;
+    padding: 16px 48px;
+}
+
+.header-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.brand-logo {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #2b4135;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+}
+
+.brand-divider {
+    width: 1px;
+    height: 22px;
+    background-color: #dcdbd3;
+}
+
+.brand-tagline {
+    font-size: 13px;
+    color: #6c736e;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.back-link {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #2b4135;
+    text-decoration: none;
+}
+
+.btn-logout {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #26312a;
+    text-decoration: none;
+    padding: 8px 18px;
+    border: 1px solid #4a544e;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.btn-logout:hover {
+    background-color: #eaede6;
+}
+
+/* Kontainer Utama Dashboard */
+.dashboard-wrapper {
+    flex: 1;
+    max-width: 1180px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 40px 48px 56px;
+}
+
+/* Bagian Sapaan (Hero) */
+.greeting-section {
+    border-bottom: 1px solid #e4e3dc;
+    padding-bottom: 24px;
+    margin-bottom: 36px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: #3b4d43;
+    margin-bottom: 12px;
+}
+
+.status-badge svg {
+    width: 15px;
+    height: 15px;
+    stroke: #2b4135;
+}
+
+.greeting-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 46px;
+    font-weight: 400;
+    color: #2b4135;
+    margin-bottom: 12px;
+}
+
+.greeting-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14.5px;
+    color: #6c736e;
+}
+
+.greeting-date {
+    font-size: 12.5px;
+    color: #6c736e;
+}
+
+/* Grid 2 Kolom (Sidebar Kiri + Cerita Kanan) */
+.content-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 36px;
+    align-items: start;
+}
+
+/* Sidebar Profil */
+.profile-card {
+    background-color: #eaede6;
+    border-radius: 12px;
+    padding: 26px 24px;
+    margin-bottom: 28px;
+}
+
+.profile-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.9px;
+    text-transform: uppercase;
+    color: #3b4d43;
+    margin-bottom: 18px;
+}
+
+.avatar-large {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #2b4135;
+    color: #ffffff;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+.profile-name {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #222925;
+    margin-bottom: 4px;
+}
+
+.profile-email {
+    font-size: 12.5px;
+    color: #6c736e;
+    word-break: break-all;
+}
+
+.profile-divider {
+    border: none;
+    border-top: 1px solid #d8ddd4;
+    margin: 20px 0;
+}
+
+.bio-heading {
+    font-size: 12px;
+    font-weight: 600;
+    color: #26312a;
+    margin-bottom: 8px;
+}
+
+.bio-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #5d6660;
+}
+
+.sidebar-note-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #222925;
+    margin-bottom: 10px;
+}
+
+.sidebar-note-text {
+    font-size: 13px;
+    line-height: 1.65;
+    color: #6c736e;
+}
+
+/* Kolom Kanan: Daftar Cerita */
+.stories-header {
+    margin-bottom: 22px;
+}
+
+.stories-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: #222925;
+    margin-bottom: 6px;
+}
+
+.stories-subtitle {
+    font-size: 13px;
+    color: #6c736e;
+}
+
+.story-card {
+    background-color: #faf9f5;
+    border: 1px solid #e4e3dc;
+    border-radius: 12px;
+    padding: 28px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.story-card.featured {
+    margin-bottom: 22px;
+}
+
+.story-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.story-category {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #3b4d43;
+}
+
+.story-date {
+    font-size: 12px;
+    color: #6c736e;
+}
+
+.story-card-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #222925;
+    margin-bottom: 12px;
+}
+
+.story-card.featured .story-card-title {
+    font-size: 28px;
+}
+
+.story-excerpt {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #5d6660;
+    margin-bottom: 24px;
+}
+
+.story-author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.avatar-small {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #eaede6;
+    color: #2b4135;
+    font-size: 10.5px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.author-name {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #26312a;
+}
+
+.stories-subgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
+
+/* Footer */
+.site-footer {
+    border-top: 1px solid #e4e3dc;
+    padding: 22px 48px;
+    margin-top: auto;
+}
+
+.footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #6c736e;
+}
+
+.footer-quote {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 13px;
+}
+
+@media (max-width: 900px) {
+    .content-grid,
+    .stories-subgrid {
+        grid-template-columns: 1fr;
+    }
+    .greeting-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
