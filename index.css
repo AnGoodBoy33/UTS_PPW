@@ -1,0 +1,241 @@
+:root {
+    --bg-main: #F9F9F6;
+    --bg-card: #F0EFE9;
+    --text-dark: #2A3930;
+    --text-muted: #757575;
+    --primary-color: #274737;
+    --font-serif: Georgia, "Times New Roman", Times, serif;
+    --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-dark);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+}
+
+/* Typography */
+h1, h2, h3, .features-title h2 { 
+    font-family: var(--font-serif); 
+}
+a { 
+    text-decoration: none; 
+    color: inherit; 
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+    border-bottom: 1px solid #EAEAEA;
+}
+.nav-left { display: flex; align-items: baseline; gap: 15px; }
+.logo { font-size: 28px; font-weight: bold; color: var(--primary-color); }
+.tagline { color: var(--text-muted); font-size: 14px; border-left: 1px solid #CCC; padding-left: 15px; }
+.nav-right { display: flex; align-items: center; gap: 25px; font-size: 14px; font-weight: bold; }
+.nav-link.active { border-bottom: 2px solid var(--text-dark); padding-bottom: 2px; }
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+.btn-primary { background-color: var(--primary-color); color: #FFF; border: none; }
+.btn-primary:hover { background-color: #1A3125; }
+.btn-outline { background-color: transparent; border: 1px solid var(--text-muted); color: var(--text-dark); }
+.btn-outline:hover { border-color: var(--primary-color); }
+
+/* Hero Section */
+.hero {
+    display: flex;
+    padding: 60px 5%;
+    gap: 50px;
+    align-items: center;
+    min-height: 70vh;
+}
+.hero-left, .hero-right { flex: 1; }
+.hero-left .label { font-size: 11px; font-weight: bold; color: var(--primary-color); letter-spacing: 1px; }
+.hero-left h2 { font-size: 54px; line-height: 1.2; margin: 15px 0 20px; color: var(--primary-color); }
+.hero-desc { color: var(--text-muted); font-size: 16px; margin-bottom: 30px; max-width: 450px; }
+.hero-buttons { display: flex; gap: 15px; }
+
+/* Hero Card Right */
+.card-wrapper {
+    background-color: var(--bg-card);
+    padding: 40px;
+    border-radius: 8px;
+    text-align: center;
+}
+.story-card {
+    background: #FFF;
+    padding: 35px;
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    text-align: left;
+}
+
+.card-header { 
+    display: flex; 
+    justify-content: space-between; 
+    font-size: 11px; 
+    font-weight: bold; 
+    color: var(--text-muted); 
+    margin-bottom: 20px; 
+}
+.story-card h3 { font-size: 24px; margin-bottom: 15px; }
+.story-card p { color: var(--text-muted); font-size: 14px; margin-bottom: 15px; }
+.story-card hr { border: 0; border-top: 1px solid #EAEAEA; margin: 20px 0; }
+.author-info { display: flex; align-items: center; gap: 12px; }
+.avatar { 
+    background-color: var(--bg-card); 
+    color: var(--primary-color); 
+    width: 35px; 
+    height: 35px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    border-radius: 50%; 
+    font-size: 12px; 
+    font-weight: bold; 
+}
+.author-details strong { display: block; font-size: 13px; color: var(--text-dark); }
+.author-details span { font-size: 12px; color: var(--text-muted); }
+.card-caption { font-size: 13px; color: var(--text-muted); margin-top: 20px; font-family: var(--font-serif); }
+
+/* Features Section */
+.features { 
+    background-color: #F6F6F2; 
+    padding: 60px 5%; 
+    border-top: 1px solid #EAEAEA; 
+    border-bottom: 1px solid #EAEAEA;
+}
+
+.features-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+.features-title h2 { font-size: 32px; color: var(--text-dark); }
+.features-title p { color: var(--text-muted); margin-top: 5px; }
+.features-link { font-size: 14px; font-weight: bold; color: var(--primary-color); }
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+
+.feature-item .feature-label { 
+    font-size: 11px; 
+    font-weight: bold; 
+    color: var(--primary-color); 
+    letter-spacing: 1px; 
+}
+
+.feature-item h4 { font-size: 20px; font-family: var(--font-serif); margin: 10px 0; }
+.feature-item p { font-size: 14px; color: var(--text-muted); }
+
+/* Footer */
+footer { 
+    display: flex; 
+    justify-content: space-between; 
+    padding: 30px 5%; 
+    font-size: 13px; 
+    color: var(--text-muted); 
+}
+
+.footer-quote { font-family: var(--font-serif); }
+
+/* Update sedikit di card-wrapper agar menahan lebar */
+.card-wrapper {
+    background-color: var(--bg-card);
+    padding: 40px;
+    border-radius: 8px;
+    text-align: center;
+    width: 100%;
+    max-width: 550px;
+}
+
+/* Jendela pantau yang menyembunyikan slide lainnya */
+.slider-viewport {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    border-radius: 6px;
+}
+
+/* Rel panjang tempat semua slide diletakkan berdampingan */
+.slider-track {
+    display: flex;
+    /* Lebar 400% karena ada 4 slide di dalamnya */
+    width: 400%; 
+    /* Durasi 12 detik, animasi terus berulang tanpa batas */
+    animation: autoSlide 12s infinite; 
+}
+
+/* Masing-masing slide mengambil porsi sama rata */
+.slide {
+    width: 25%; /* 100% dibagi 4 */
+    flex-shrink: 0;
+}
+
+/* 
+   Animasi Keyframes:
+   Menggeser rel (track) ke kiri (-) seukuran satu slide (25%)
+*/
+@keyframes autoSlide {
+    0%, 20%   { transform: translateX(0); }         /* Diam di Slide 1 */
+    25%, 45%  { transform: translateX(-25%); }      /* Geser & diam di Slide 2 */
+    50%, 70%  { transform: translateX(-50%); }      /* Geser & diam di Slide 3 */
+    75%, 95%  { transform: translateX(-75%); }      /* Geser ke Slide Duplikat (1) */
+    100%      { transform: translateX(0); }         /* Snap kembali diam-diam ke Slide 1 asli */
+}
+
+/* Update pada .nav-link di navbar */
+/* Setup pseudo-element untuk garis bawah pada semua menu nav-link */
+.nav-link {
+    position: relative;
+    padding-bottom: 2px;
+    text-decoration: none;
+}
+
+/* Hapus border-bottom kaku bawaan sebelumnya */
+.nav-link.active {
+    border-bottom: none;
+}
+
+/* Membuat elemen garis di bawah teks (awalnya lebar 0) */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--text-dark);
+    transition: width 0.3s ease-in-out;
+}
+
+/* 1. Kondisi Default: Menu aktif ("Awal") garisnya tampil 100% */
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* 2. Saat area menu kanan disorot, garis pada menu "Awal" ditarik mundur/menghilang */
+.nav-right:hover .nav-link.active::after {
+    width: 0;
+}
+
+/* 3. Mencegah garis "Awal" hilang jika kebetulan kursor kembali menyorot teks "Awal" */
+.nav-right:hover .nav-link.active:hover::after {
+    width: 100%;
+}
+
+/* 4. Saat teks menu lain ("Masuk") disorot, garisnya maju/muncul secara perlahan */
+.nav-link:hover::after {
+    width: 100%;
+}
