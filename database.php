@@ -1,18 +1,8 @@
 <?php
 $account = array (
-  'pradhitanabil@gmail.com' => 
+  'zaki@soleh.com' => 
   array (
-    'nama' => 'Nabil Ramadhan Pradhita',
-    'password' => 'admin123',
-  ),
-  'johncalvin@gmail.com' => 
-  array (
-    'nama' => 'John Calvin',
-    'password' => '123',
-  ),
-  'kawaiipokemann@gmail.com' => 
-  array (
-    'nama' => 'Justin Melvino',
-    'password' => 'Etpr0f_kommas',
+    'nama' => 'Zaki Soleh',
+    'password' => '$2y$10$iBk/6RoELJZoQl3QI6BNcuJlZaaEwhs7t1KanEfkkS1E0zoDcxoGm',
   ),
 );

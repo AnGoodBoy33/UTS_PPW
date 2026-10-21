@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $dataUser = $account[$email] ?? null;
 
-    if ($dataUser !== null && $dataUser['password'] === $password) {
+    if ($dataUser !== null && password_verify($password, $dataUser['password'])) {
         $_SESSION['nama_user'] = $dataUser['nama'];
         $_SESSION['email_user'] = $email;
 
