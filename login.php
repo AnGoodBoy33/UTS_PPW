@@ -12,20 +12,35 @@ if (isset($_SESSION['nama_user']) || isset($_COOKIE['user_ingat'])) {
 $pesan = $_GET['pesan'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = htmlspecialchars(trim($_POST['mail'] ?? ''));
+    $email = trim($_POST['mail'] ?? '');
     $password = $_POST['pswd'] ?? '';
     $rememberMe = $_POST['remember'] ?? '';
 
     include 'database.php';
 
-    $dataUser = $account[$email] ?? null;
+    // KUNCI ENKRIPSI AES-256 (Disisipkan)
+    $kunci_sistem = "SelaRuangCeritaBersama2026!#$";
+    $metode_aes   = "AES-256-CBC";
+    $iv_aes       = substr(hash('sha256', $kunci_sistem), 0, 16);
+
+    // Konversi email form ke bentuk enkripsi untuk mencari key array (Disisipkan)
+    $email_aman = openssl_encrypt($email, $metode_aes, $kunci_sistem, 0, $iv_aes);
+
+    $dataUser = $account[$email_aman] ?? $account[$email] ?? null;
 
     if ($dataUser !== null && password_verify($password, $dataUser['password'])) {
-        $_SESSION['nama_user'] = $dataUser['nama'];
+        
+        // Dekripsi nama terenkripsi database menjadi teks asli untuk session (Disisipkan)
+        $nama_asli = openssl_decrypt($dataUser['nama'], $metode_aes, $kunci_sistem, 0, $iv_aes);
+        if ($nama_asli === false) {
+            $nama_asli = $dataUser['nama'];
+        }
+
+        $_SESSION['nama_user'] = $nama_asli;
         $_SESSION['email_user'] = $email;
 
         if ($rememberMe === '1') {
-            setcookie("user_ingat", $dataUser['nama'], time() + (86400 * 30), "/");
+            setcookie("user_ingat", $nama_asli, time() + (86400 * 30), "/");
             setcookie("email_ingat", $email, time() + (86400 * 30), "/");
         }
 

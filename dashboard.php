@@ -17,6 +17,35 @@ $is_admin = ($current_user === 'Nabil Ramadhan Pradhita' || $current_user === 'N
 // 2. Hubungkan ke Database File
 include 'database.php';
 
+// ==========================================
+// --- DISISIPKAN: DEKRIPSI DATA MEMORY ---
+// ==========================================
+$kunci_sistem = "SelaRuangCeritaBersama2026!#$";
+$metode_aes   = "AES-256-CBC";
+$iv_aes       = substr(hash('sha256', $kunci_sistem), 0, 16);
+
+if (isset($menfess_data) && is_array($menfess_data)) {
+    foreach ($menfess_data as $key => $post) {
+        if (isset($post['pesan'])) {
+            $menfess_data[$key]['pesan'] = openssl_decrypt($post['pesan'], $metode_aes, $kunci_sistem, 0, $iv_aes) ?: $post['pesan'];
+        }
+        if (isset($post['nama'])) {
+            $menfess_data[$key]['nama'] = openssl_decrypt($post['nama'], $metode_aes, $kunci_sistem, 0, $iv_aes) ?: $post['nama'];
+        }
+        if (isset($post['komentar']) && is_array($post['komentar'])) {
+            foreach ($post['komentar'] as $k_key => $kom) {
+                if (isset($kom['pesan'])) {
+                    $menfess_data[$key]['komentar'][$k_key]['pesan'] = openssl_decrypt($kom['pesan'], $metode_aes, $kunci_sistem, 0, $iv_aes) ?: $kom['pesan'];
+                }
+                if (isset($kom['nama'])) {
+                    $menfess_data[$key]['komentar'][$k_key]['nama'] = openssl_decrypt($kom['nama'], $metode_aes, $kunci_sistem, 0, $iv_aes) ?: $kom['nama'];
+                }
+            }
+        }
+    }
+}
+// ==========================================
+
 if (!isset($menfess_data)) $menfess_data = [];
 if (!isset($reports_data)) $reports_data = [];
 if (!isset($poll_data)) {
@@ -27,6 +56,31 @@ if (!isset($poll_data)) {
         3 => ['id' => 4, 'opsi' => 'Lainnya', 'jumlah_vote' => 0],
     ];
 }
+
+function time_ago($timestamp) {
+    $selisih = max(0, time() - (int)$timestamp);
+
+    if ($selisih < 60) return 'Baru saja';
+    if ($selisih < 3600) return floor($selisih / 60) . ' menit lalu';
+    if ($selisih < 86400) return floor($selisih / 3600) . ' jam lalu';
+    if ($selisih < 2592000) return floor($selisih / 86400) . ' hari lalu';
+
+    return date('d M Y', (int)$timestamp);
+}
+
+$kategori_aktif = $_GET['kategori'] ?? 'Semua';
+$kata_kunci = trim($_GET['q'] ?? '');
+$edit_post_id = $_GET['edit_post'] ?? '';
+$edit_kom_id = $_GET['edit_kom'] ?? '';
+$show_reply = $_GET['reply_to'] ?? '';
+$total_votes = array_sum(array_map('intval', array_column($poll_data, 'jumlah_vote')));
+$filtered_menfess = array_filter($menfess_data, function ($post) use ($kategori_aktif, $kata_kunci) {
+    $sesuai_kategori = $kategori_aktif === 'Semua' || ($post['kategori'] ?? '') === $kategori_aktif;
+    $teks_pencarian = ($post['pesan'] ?? '') . ' ' . ($post['kategori'] ?? '') . ' ' . ($post['nama'] ?? 'Anonim');
+    $sesuai_pencarian = $kata_kunci === '' || stripos($teks_pencarian, $kata_kunci) !== false;
+
+    return $sesuai_kategori && $sesuai_pencarian;
+});
 
 $data_berubah = false;
 
@@ -52,7 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'komentar' => []
             ];
             
-            // JANGAN SIMPAN NAMA SAMA SEKALI JIKA ANONIM
             if (!$is_anonim) {
                 $post_baru['nama'] = htmlspecialchars($current_user);
             }
@@ -87,7 +140,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($menfess_data as $key => $post) {
             if ((string)$post['id'] === (string)$post_id) {
                 $is_owner = isset($post['nama']) && $post['nama'] === $current_user;
-                // Bisa dihapus jika milik sendiri ATAU jika admin
                 if ($is_owner || $is_admin) {
                     unset($menfess_data[$key]);
                     $menfess_data = array_values($menfess_data);
@@ -225,11 +277,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // 4. SIMPAN PERMANEN
+        // 4. SIMPAN PERMANEN
     if ($data_berubah) {
         if (!isset($account)) $account = []; 
+
+        // ==========================================
+        // --- DISISIPKAN: ENKRIPSI TOTAL SEBELUM TULIS FILE ---
+        // ==========================================
+        $menfess_tulis = $menfess_data;
+        if (is_array($menfess_tulis)) {
+            foreach ($menfess_tulis as $m_key => $post) {
+                if (isset($post['pesan'])) {
+                    $menfess_tulis[$m_key]['pesan'] = openssl_encrypt($post['pesan'], $metode_aes, $kunci_sistem, 0, $iv_aes);
+                }
+                if (isset($post['nama'])) {
+                    $menfess_tulis[$m_key]['nama'] = openssl_encrypt($post['nama'], $metode_aes, $kunci_sistem, 0, $iv_aes);
+                }
+                if (isset($post['komentar']) && is_array($post['komentar'])) {
+                    foreach ($post['komentar'] as $k_key => $kom) {
+                        if (isset($kom['pesan'])) {
+                            $menfess_tulis[$m_key]['komentar'][$k_key]['pesan'] = openssl_encrypt($kom['pesan'], $metode_aes, $kunci_sistem, 0, $iv_aes);
+                        }
+                        if (isset($kom['nama'])) {
+                            $menfess_tulis[$m_key]['komentar'][$k_key]['nama'] = openssl_encrypt($kom['nama'], $metode_aes, $kunci_sistem, 0, $iv_aes);
+                        }
+                    }
+                }
+            }
+        }
+        // ==========================================
+
         $isi_file = "<?php\n\n\$account = " . var_export($account, true) . ";\n\n";
-        $isi_file .= "\$menfess_data = " . var_export($menfess_data, true) . ";\n\n";
+        $isi_file .= "\$menfess_data = " . var_export($menfess_tulis, true) . ";\n\n";
         $isi_file .= "\$reports_data = " . var_export($reports_data, true) . ";\n\n";
         $isi_file .= "\$poll_data = " . var_export($poll_data, true) . ";\n";
         file_put_contents('database.php', $isi_file);
@@ -239,34 +318,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
-
-// 5. Filter Kategori
-$kategori_aktif = $_GET['kategori'] ?? 'Semua';
-$show_reply = $_GET['reply_to'] ?? '';
-$edit_kom_id = $_GET['edit_kom'] ?? ''; 
-$edit_post_id = $_GET['edit_post'] ?? ''; 
-$filtered_menfess = [];
-
-foreach ($menfess_data as $post) {
-    if ($kategori_aktif === 'Semua' || $post['kategori'] === $kategori_aktif) {
-        $filtered_menfess[] = $post;
-    }
-}
-
-function time_ago($datetime) {
-    $time = is_numeric($datetime) ? $datetime : strtotime($datetime);
-    $diff = time() - $time;
-    if ($diff < 0) $diff = 0; 
-    if ($diff < 60) return "Baru saja";
-    if ($diff < 3600) return floor($diff / 60) . " menit lalu";
-    if ($diff < 86400) return floor($diff / 3600) . " jam lalu";
-    if ($diff < 604800) return floor($diff / 86400) . " hari lalu";
-    return date('d M Y', $time);
-}
-
-$total_votes = 0;
-foreach ($poll_data as $poll) { $total_votes += $poll['jumlah_vote']; }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>

@@ -1,6 +1,11 @@
 <?php
 $error = '';
 
+// KUNCI ENKRIPSI AES-256 (Disisipkan)
+$kunci_sistem = "SelaRuangCeritaBersama2026!#$";
+$metode_aes   = "AES-256-CBC";
+$iv_aes       = substr(hash('sha256', $kunci_sistem), 0, 16);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama_lengkap = trim($_POST['fullname'] ?? '');
     $email = trim($_POST['mail'] ?? '');
@@ -30,12 +35,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ];
         }
 
-        if (isset($account[$email])) {
+        // --- ENKRIPSI DATA FORM SEBELUM DI-CHECK & DI-INPUT (Disisipkan) ---
+        $email_aman = openssl_encrypt($email, $metode_aes, $kunci_sistem, 0, $iv_aes);
+        $nama_aman  = openssl_encrypt($nama_lengkap, $metode_aes, $kunci_sistem, 0, $iv_aes);
+
+        if (isset($account[$email_aman]) || isset($account[$email])) {
             $error = 'Email sudah terdaftar. Silakan gunakan email lain.';
         } else {
-            // Tambahkan akun baru
-            $account[$email] = [
-                "nama" => $nama_lengkap,
+            // Tambahkan akun baru dengan data terenkripsi
+            $account[$email_aman] = [
+                "nama" => $nama_aman,
                 "password" => password_hash($password, PASSWORD_DEFAULT)
             ];
 

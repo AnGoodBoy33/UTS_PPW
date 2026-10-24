@@ -16,6 +16,11 @@ $account = array (
     'nama' => 'Justin Melvino',
     'password' => '$2y$10$4TPLL8ywG79QbYdcNYxdHurx6yG.ZWW4tfqqEvyeI1eXDHzv0KdjW',
   ),
+  'B/xQ+F/6aDzFOPuSo8jLpg==' => 
+  array (
+    'nama' => '7fVDEOLIAIXRBE5w9efv5z0khCZ3awihApoFzCy1IRs=',
+    'password' => '$2y$10$O9SclNQYzwbwaxcqELUSvewTGyQZZzMJHQ7RI6QMa1d2tbclLTToa',
+  ),
 );
 
 $menfess_data = array (
