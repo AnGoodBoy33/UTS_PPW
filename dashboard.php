@@ -116,8 +116,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pesan = trim($_POST['pesan'] ?? '');
         $kategori = $_POST['kategori'] ?? 'Semua';
         $is_anonim = isset($_POST['anonim']) ? 1 : 0;
+        $error_menfess = '';
+        if (empty($pesan)) {
+            $error_menfess = 'Pesan tidak boleh kosong!';
+        } elseif (!in_array($kategori, ['Curhat', 'InfoKelas', 'Teman Belajar', 'Apresiasi'], true)) {
+            $error_menfess = 'Silakan pilih kategori terlebih dahulu!';
+        }
 
-        if (!empty($pesan) && $kategori !== 'Semua') {
+        if ($error_menfess === '' && !empty($pesan) && $kategori !== 'Semua') {
             $post_baru = [
                 'id' => uniqid('post_'),
                 'pesan' => htmlspecialchars($pesan),
@@ -421,16 +427,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <main class="feed-content">
             
             <!-- FORM KIRIM MENFESS -->
-            <form id="form-menfess" method="POST" action="dashboard.php" class="card create-post">
+            <form id="form-menfess" method="POST" action="dashboard.php" class="card create-post" novalidate>
                 <input type="hidden" name="action" value="kirim_menfess">
                 <div class="post-input-wrapper">
                     <div class="avatar-small"><?= $user_inisial ?></div>
-                    <input type="text" name="pesan" placeholder="Tulis menfess, pertanyaan, atau informasi..." class="post-input" required autocomplete="off">
+                    <input type="text" name="pesan" placeholder="Tulis menfess, pertanyaan, atau informasi..." class="post-input" required autocomplete="off"
+                        value="<?= htmlspecialchars($_POST['pesan'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                 </div>
+
+                <?php if (!empty($error_menfess)): ?>
+                    <span class="field-error"><?= htmlspecialchars($error_menfess, ENT_QUOTES, 'UTF-8') ?></span>
+                <?php endif; ?>
+
                 <div class="post-actions">
                     <div class="post-actions-left">
                         <select name="kategori" class="kategori-select" required>
-                            <option value="" disabled selected>Kategori: Semua ▾</option>
+                            <option value="" disabled selected>Kategori</option>
                             <option value="Curhat">Curhat</option>
                             <option value="InfoKelas">InfoKelas</option>
                             <option value="Teman Belajar">Teman Belajar</option>

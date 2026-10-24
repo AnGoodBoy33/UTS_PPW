@@ -10,6 +10,7 @@ if (isset($_SESSION['nama_user']) || isset($_COOKIE['user_ingat'])) {
 }
 
 $pesan = $_GET['pesan'] ?? '';
+$errors = [];
 
 // Firefox belum mendukung -webkit-text-security, jadi di sana dipakai input password biasa
 $pakaiSamarkan = stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Firefox') === false;
@@ -19,39 +20,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['pswd'] ?? '';
     $rememberMe = $_POST['remember'] ?? '';
 
-    include 'database.php';
+    // Validasi per kolom (sama seperti register.php)
+    if ($email === '') {
+        $errors['mail'] = 'Email tidak boleh kosong!';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors['mail'] = 'Format email tidak valid.';
+    }
 
-    // KUNCI ENKRIPSI AES-256 (Disisipkan)
-    $kunci_sistem = "SelaRuangCeritaBersama2026!#$";
-    $metode_aes   = "AES-256-CBC";
-    $iv_aes       = substr(hash('sha256', $kunci_sistem), 0, 16);
+    if ($password === '') {
+        $errors['pswd'] = 'Kata sandi tidak boleh kosong!';
+    } elseif (!preg_match('/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}/', $password)) {
+        $errors['pswd'] = 'Password harus minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan simbol.';
+    }
 
-    // Konversi email form ke bentuk enkripsi untuk mencari key array (Disisipkan)
-    $email_aman = openssl_encrypt($email, $metode_aes, $kunci_sistem, 0, $iv_aes);
+    // Logika login hanya dijalankan jika input sudah valid
+    if (empty($errors)) {
+        include 'database.php';
 
-    $dataUser = $account[$email_aman] ?? $account[$email] ?? null;
+        // KUNCI ENKRIPSI AES-256 (Disisipkan)
+        $kunci_sistem = "SelaRuangCeritaBersama2026!#$";
+        $metode_aes   = "AES-256-CBC";
+        $iv_aes       = substr(hash('sha256', $kunci_sistem), 0, 16);
 
-    if ($dataUser !== null && password_verify($password, $dataUser['password'])) {
+        // Konversi email form ke bentuk enkripsi untuk mencari key array (Disisipkan)
+        $email_aman = openssl_encrypt($email, $metode_aes, $kunci_sistem, 0, $iv_aes);
 
-        // Dekripsi nama terenkripsi database menjadi teks asli untuk session (Disisipkan)
-        $nama_asli = openssl_decrypt($dataUser['nama'], $metode_aes, $kunci_sistem, 0, $iv_aes);
-        if ($nama_asli === false) {
-            $nama_asli = $dataUser['nama'];
+        $dataUser = $account[$email_aman] ?? $account[$email] ?? null;
+
+        if ($dataUser !== null && password_verify($password, $dataUser['password'])) {
+
+            // Dekripsi nama terenkripsi database menjadi teks asli untuk session (Disisipkan)
+            $nama_asli = openssl_decrypt($dataUser['nama'], $metode_aes, $kunci_sistem, 0, $iv_aes);
+            if ($nama_asli === false) {
+                $nama_asli = $dataUser['nama'];
+            }
+
+            $_SESSION['nama_user'] = $nama_asli;
+            $_SESSION['email_user'] = $email;
+
+            if ($rememberMe === '1') {
+                setcookie("user_ingat", $nama_asli, time() + (86400 * 30), "/");
+                setcookie("email_ingat", $email, time() + (86400 * 30), "/");
+            }
+
+            header("Location: dashboard.php");
+            exit();
+        } else {
+            header("Location: login.php?pesan=gagal");
+            exit();
         }
-
-        $_SESSION['nama_user'] = $nama_asli;
-        $_SESSION['email_user'] = $email;
-
-        if ($rememberMe === '1') {
-            setcookie("user_ingat", $nama_asli, time() + (86400 * 30), "/");
-            setcookie("email_ingat", $email, time() + (86400 * 30), "/");
-        }
-
-        header("Location: dashboard.php");
-        exit();
-    } else {
-        header("Location: login.php?pesan=gagal");
-        exit();
     }
 }
 ?>
@@ -102,17 +119,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="alert-box alert-error">Login Gagal! Email atau Password salah.</div>
             <?php endif; ?>
 
-            <form action="login.php" method="POST">
+            <form action="login.php" method="POST" novalidate>
                 <div class="form-group">
                     <label for="mail">Email</label>
-                    <input type="email" id="mail" name="mail" placeholder="nama@contoh.com" required>
+                    <input type="email" id="mail" name="mail" placeholder="nama@contoh.com"
+                        value="<?= htmlspecialchars($_POST['mail'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                        class="<?= isset($errors['mail']) ? 'is-error' : '' ?>" required>
+                    <?php if (isset($errors['mail'])): ?>
+                        <span class="field-error"><?= htmlspecialchars($errors['mail'], ENT_QUOTES, 'UTF-8') ?></span>
+                    <?php endif; ?>
                 </div>
 
                 <div class="form-group">
                     <label for="pswd">Kata sandi</label>
                     <div class="pw-wrap">
                         <input type="<?= $pakaiSamarkan ? 'text' : 'password' ?>"
-                            id="pswd" name="pswd" class="pw-field"
+                            id="pswd" name="pswd"
+                            class="pw-field<?= isset($errors['pswd']) ? ' is-error' : '' ?>"
                             placeholder="Masukkan kata sandi"
                             autocomplete="current-password" autocapitalize="off" spellcheck="false" required>
 
@@ -127,6 +150,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </label>
                         <?php endif; ?>
                     </div>
+                    <?php if (isset($errors['pswd'])): ?>
+                        <span class="field-error"><?= htmlspecialchars($errors['pswd'], ENT_QUOTES, 'UTF-8') ?></span>
+                    <?php endif; ?>
                 </div>
 
                 <button type="submit" class="btn-submit">Masuk</button>

@@ -400,3 +400,36 @@ body {
     outline: 2px solid #2b4135;
     outline-offset: 2px;
 }
+
+/* ===== PESAN ERROR PER KOLOM  ===== */
+.field-error {
+    position: relative;
+    display: block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border: 1px solid #ecc6c6;
+    border-radius: 8px;
+    background-color: #f9e6e6;
+    color: #8c2d2d;
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+/* Panah kecil di atas kotak, mirip popup browser */
+.field-error::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 18px;
+    width: 10px;
+    height: 10px;
+    background-color: #f9e6e6;
+    border-top: 1px solid #ecc6c6;
+    border-left: 1px solid #ecc6c6;
+    transform: rotate(45deg);
+}
+
+/* Border kolom yang error ikut berwarna merah */
+.form-group input.is-error {
+    border-color: #c0392b;
+}

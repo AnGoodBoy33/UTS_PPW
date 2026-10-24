@@ -1,5 +1,5 @@
 <?php
-$error = '';
+$errors = [];
 
 // Firefox belum mendukung -webkit-text-security, jadi di sana dipakai input password biasa
 $pakaiSamarkan = stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Firefox') === false;
@@ -14,13 +14,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['mail'] ?? '');
     $password = $_POST['pswd'] ?? '';
 
-    if (empty($nama_lengkap) || empty($email) || empty($password)) {
-        $error = 'Semua kolom wajib diisi.';
+    // Validasi per kolom, pesan ditampilkan di bawah kolom yang bermasalah
+    if ($nama_lengkap === '') {
+        $errors['fullname'] = 'Nama tidak boleh kosong!';
+    }
+
+    if ($email === '') {
+        $errors['mail'] = 'Email tidak boleh kosong!';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = 'Format email tidak valid.';
+        $errors['mail'] = 'Format email tidak valid.';
+    }
+
+    if ($password === '') {
+        $errors['pswd'] = 'Kata sandi tidak boleh kosong!';
     } elseif (!preg_match('/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}/', $password)) {
-        $error = 'Password harus minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan simbol.';
-    } else {
+        $errors['pswd'] = 'Password harus minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan simbol.';
+    }
+
+    if (empty($errors)) {
         // Ambil data database yang sudah ada (termasuk menfess & polling yang ada)
         include 'database.php';
 
@@ -43,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nama_aman  = openssl_encrypt($nama_lengkap, $metode_aes, $kunci_sistem, 0, $iv_aes);
 
         if (isset($account[$email_aman]) || isset($account[$email])) {
-            $error = 'Email sudah terdaftar. Silakan gunakan email lain.';
+            $errors['mail'] = 'Email sudah terdaftar. Silakan gunakan email lain.';
         } else {
             // Tambahkan akun baru dengan data terenkripsi
             $account[$email_aman] = [
@@ -62,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header("Location: login.php?pesan=registrasi_sukses");
                 exit();
             } else {
-                $error = 'Registrasi gagal. Periksa izin akses file database.php.';
+                $errors['umum'] = 'Registrasi gagal. Periksa izin akses file database.php.';
             }
         }
     }
@@ -107,24 +118,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p>Buat akun untuk masuk dan menemukan cerita-cerita kecil di sekitar kita.</p>
             </div>
 
-            <?php if (!empty($error)): ?>
-                <div class="error-message"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
+            <?php if (isset($errors['umum'])): ?>
+                <div class="error-message"><?= htmlspecialchars($errors['umum'], ENT_QUOTES, 'UTF-8') ?></div>
             <?php endif; ?>
 
-            <form action="register.php" method="POST" class="register-form">
+            <form action="register.php" method="POST" class="register-form" novalidate>
                 <div class="form-group">
                     <label for="fullname">Nama</label>
-                    <input type="text" id="fullname" name="fullname" placeholder="Nama yang ingin kamu gunakan" value="<?= htmlspecialchars($_POST['fullname'] ?? '', ENT_QUOTES, 'UTF-8') ?>" required>
+                    <input type="text" id="fullname" name="fullname" placeholder="Nama yang ingin kamu gunakan"
+                        value="<?= htmlspecialchars($_POST['fullname'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                        class="<?= isset($errors['fullname']) ? 'is-error' : '' ?>" required>
+                    <?php if (isset($errors['fullname'])): ?>
+                        <span class="field-error"><?= htmlspecialchars($errors['fullname'], ENT_QUOTES, 'UTF-8') ?></span>
+                    <?php endif; ?>
                 </div>
+
                 <div class="form-group">
                     <label for="mail">Email</label>
-                    <input type="email" id="mail" name="mail" placeholder="nama@contoh.com" value="<?= htmlspecialchars($_POST['mail'] ?? '', ENT_QUOTES, 'UTF-8') ?>" required>
+                    <input type="email" id="mail" name="mail" placeholder="nama@contoh.com"
+                        value="<?= htmlspecialchars($_POST['mail'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                        class="<?= isset($errors['mail']) ? 'is-error' : '' ?>" required>
+                    <?php if (isset($errors['mail'])): ?>
+                        <span class="field-error"><?= htmlspecialchars($errors['mail'], ENT_QUOTES, 'UTF-8') ?></span>
+                    <?php endif; ?>
                 </div>
+
                 <div class="form-group">
                     <label for="pswd">Kata sandi</label>
                     <div class="pw-wrap">
                         <input type="<?= $pakaiSamarkan ? 'text' : 'password' ?>"
-                            id="pswd" name="pswd" class="pw-field"
+                            id="pswd" name="pswd"
+                            class="pw-field<?= isset($errors['pswd']) ? ' is-error' : '' ?>"
                             placeholder="Buat kata sandi"
                             autocomplete="new-password" autocapitalize="off" spellcheck="false" required>
 
@@ -139,8 +163,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </label>
                         <?php endif; ?>
                     </div>
+                    <?php if (isset($errors['pswd'])): ?>
+                        <span class="field-error"><?= htmlspecialchars($errors['pswd'], ENT_QUOTES, 'UTF-8') ?></span>
+                    <?php endif; ?>
                     <small>Gunakan minimal 8 karakter, gabungkan huruf besar, huruf kecil, angka, dan simbol.</small>
                 </div>
+
                 <button type="submit" class="submit-button">Daftar</button>
             </form>
 
