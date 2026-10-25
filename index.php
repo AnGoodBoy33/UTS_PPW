@@ -38,27 +38,27 @@
         <div class="hero-right">
             <div class="card-wrapper">
                 <?php
-                // ===== SLIDESHOW: Tarik menfess terbaru dari database.php (didekripsi seperti di dashboard) =====[cite: 7]
+                // SLIDESHOW: Tarik menfess terbaru dari database.php (didekripsi seperti di dashboard)
                 date_default_timezone_set('Asia/Jakarta');
                 include 'database.php';
 
-                // Siapkan kunci buat buka data dari database[cite: 7]
+                // Kunci nya
                 $kunci_sistem = "SelaRuangCeritaBersama2026!#$";
                 $metode_aes   = "AES-256-CBC";
                 $iv_aes       = substr(hash('sha256', $kunci_sistem), 0, 16);
 
-                // Fungsi dekripsi bawaan[cite: 7]
+                // Fungsi dekripsi
                 function sela_dekripsi($teks, $metode, $kunci, $iv) {
                     if ($teks === null || $teks === '') return '';
                     return openssl_decrypt($teks, $metode, $kunci, 0, $iv) ?: $teks;
                 }
 
-                // Bersihin teks dari tag berbahaya[cite: 7]
+                // Bersihin teks dari tag berbahaya
                 function sela_aman($teks) {
                     return htmlspecialchars(html_entity_decode((string)$teks, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8');
                 }
 
-                // Bikin inisial 2 huruf dari nama[cite: 7]
+                // Bikin inisial 2 huruf dari nama
                 function sela_inisial($nama) {
                     $kata  = preg_split('/\s+/', trim($nama), -1, PREG_SPLIT_NO_EMPTY);
                     $hasil = '';
@@ -68,7 +68,6 @@
                     return $hasil !== '' ? $hasil : '?';
                 }
 
-                // Ubah waktu jadi "X menit lalu"[cite: 7]
                 function sela_waktu_lalu($timestamp) {
                     $selisih = max(0, time() - (int)$timestamp);
                     if ($selisih < 60)      return 'Baru saja';
@@ -78,13 +77,12 @@
                     return date('d M Y', (int)$timestamp);
                 }
 
-                // Ubah waktu jadi tanggal standar[cite: 7]
                 function sela_tanggal($timestamp) {
                     $bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
                     return date('j', $timestamp) . ' ' . $bulan[(int)date('n', $timestamp) - 1] . ' ' . date('Y', $timestamp);
                 }
 
-                // Logo kategori: warna dan ikon disesuaikan sama widget "Kategori Populer" di dashboard[cite: 7]
+                // Logo kategori: warna dan ikon disesuaikan sama widget "Kategori Populer" di dashboard
                 $kategori_logo = [
                     'Curhat' => [
                         'kelas' => 'kat-curhat',
@@ -108,10 +106,10 @@
                     ],
                 ];
 
-                // Postingan yang sedang dilaporkan (direport) tidak ditampilkan di halaman depan[cite: 7]
+                // Postingan yang sedang dilaporkan tidak ditampilkan di halaman depan
                 $id_dilaporkan = array_column($reports_data, 'post_id');
 
-                // Cari tiga menfess terbaru yang aman buat dipamerin[cite: 7]
+                // Cari tiga menfess terbaru yang aman buat dipamerin
                 $kandidat = [];
                 foreach ($menfess_data as $post) {
                     if (!in_array($post['id'], $id_dilaporkan, true)) {
@@ -119,7 +117,7 @@
                     }
                 }
                 
-                // Urutkan dari yang terbaru[cite: 7]
+                // Urutkan dari yang terbaru
                 usort($kandidat, function ($a, $b) {
                     return $b['waktu'] <=> $a['waktu'];
                 });
@@ -143,12 +141,11 @@
                     ];
                 }
 
-                // Kalau datanya masih kosong dari 3, isi dengan template kosong[cite: 7]
                 while (count($tampil) < 3) {
                     $tampil[] = null;
                 }
                 
-                // Tambahkan slide pertama ke paling belakang buat bikin efek perulangan loop mulus (infinite loop)[cite: 7]
+                // Tambahkan slide pertama ke paling belakang buat bikin efek perulangan loop
                 $tampil[] = $tampil[0];
                 ?>
 

@@ -1,21 +1,21 @@
 <?php
 $errors = [];
 
-// Deteksi browser
+// Deteksi browser: Firefox belum support -webkit-text-security, jadi di sana dipakai tipe password biasa[cite: 5]
 $pakaiSamarkan = stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Firefox') === false;
 
-// Siapkan kunci buat enkripsi datanya
+// Siapkan kunci brankas buat enkripsi datanya nanti[cite: 5]
 $kunci_sistem = "SelaRuangCeritaBersama2026!#$";
 $metode_aes   = "AES-256-CBC";
 $iv_aes       = substr(hash('sha256', $kunci_sistem), 0, 16);
 
-// cek isi data form
+// Kalau form pendaftaran disubmit, jalankan cek isi datanya[cite: 5]
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama_lengkap = trim($_POST['fullname'] ?? '');
     $email = trim($_POST['mail'] ?? '');
     $password = $_POST['pswd'] ?? '';
 
-    // kosong atau salah format, kasih pesan error
+    // Cek satu-satu isian form, kalau ada yang kosong atau salah format, kasih pesan error[cite: 5]
     if ($nama_lengkap === '') {
         $errors['fullname'] = 'Nama tidak boleh kosong!';
     }
@@ -32,11 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['pswd'] = 'Password harus minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan simbol.';
     }
 
-    // form aman lanjut ke database
+    // Kalau semua isian form aman dan gak ada error, lanjut ke database[cite: 5]
     if (empty($errors)) {
         include 'database.php';
 
-        // Pancing variabel database biar ga error kalau file database-nya masih kosong
+        // Pancing variabel database biar ga error (nilai default) kalau file database-nya masih kosong[cite: 5]
         if (!isset($account) || !is_array($account)) {
             $account = [];
         }
@@ -51,21 +51,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ];
         }
 
-        // Enkripsi email dan nama 
+        // Enkripsi email dan nama sebelum dicek dan disimpan biar aman[cite: 5]
         $email_aman = openssl_encrypt($email, $metode_aes, $kunci_sistem, 0, $iv_aes);
         $nama_aman  = openssl_encrypt($nama_lengkap, $metode_aes, $kunci_sistem, 0, $iv_aes);
 
-        // emailnya udah kedaftar 
+        // Cek dulu, jangan-jangan emailnya udah pernah kedaftar sebelumnya[cite: 5]
         if (isset($account[$email_aman]) || isset($account[$email])) {
             $errors['mail'] = 'Email sudah terdaftar. Silakan gunakan email lain.';
         } else {
-            // simpan akun baru beserta password
+            // Kalau belum, simpan akun baru beserta password yang udah di-hash[cite: 5]
             $account[$email_aman] = [
                 "nama" => $nama_aman,
                 "password" => password_hash($password, PASSWORD_DEFAULT)
             ];
 
-            // Tulis ulang seluruh data ke dalam file database.php 
+            // Tulis ulang seluruh data ke dalam file database.php (termasuk post, polling, dll biar ga ilang)[cite: 5]
             $kontenBaru = "<?php\n\n";
             $kontenBaru .= "\$account = " . var_export($account, true) . ";\n\n";
             $kontenBaru .= "\$menfess_data = " . var_export($menfess_data, true) . ";\n\n";
@@ -157,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
                 </div>
 
-                <!-- Input Password  -->
+                <!-- Input Password (Dengan fitur lihat sandi) -->
                 <div class="form-group">
                     <label for="pswd">Kata sandi</label>
                     <div class="pw-wrap">
