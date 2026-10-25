@@ -220,7 +220,7 @@ body {
 }
 
 .form-group input[type="email"],
-.form-group input[type="password"] {
+.form-group .pw-field {
     width: 100%;
     padding: 13px 15px;
     font-size: 13.5px;
@@ -317,4 +317,122 @@ body {
         min-height: auto;
         gap: 40px;
     }
+}
+
+/* ===== SHOW PASSWORD ===== */
+.form-group .pw-wrap {
+    position: relative;
+}
+
+/* Input tetap type="text", isinya disamarkan dengan -webkit-text-security */
+.form-group .pw-wrap .pw-field {
+    padding-right: 46px;
+    -webkit-text-security: disc;
+}
+
+/* :checked → penyamaran dilepas, sandi terlihat */
+.form-group .pw-wrap:has(.pw-toggle:checked) .pw-field {
+    -webkit-text-security: none;
+}
+
+/* Checkbox disembunyikan, tapi tetap bisa difokus dengan Tab */
+.form-group .pw-wrap .pw-toggle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Diberi prefix .form-group agar mengalahkan `.form-group label` */
+.form-group .pw-eye {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    color: #6c736e;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 0.2s, background-color 0.2s, transform 0.1s;
+}
+
+.form-group .pw-eye:hover {
+    color: #2b4135;
+    background-color: #eaede6;
+}
+
+/* :active → tombol mengecil dan berubah warna saat ditekan */
+.form-group .pw-eye:active {
+    transform: translateY(-50%) scale(0.88);
+    background-color: #dfe5dc;
+}
+
+.pw-eye svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Garis coret muncul saat checkbox dicentang */
+.pw-slash {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.form-group .pw-wrap:has(.pw-toggle:checked) .pw-slash {
+    opacity: 1;
+}
+
+/* Fokus keyboard (Tab) ditandai pada tombol mata */
+.form-group .pw-wrap .pw-toggle:focus-visible + .pw-eye {
+    outline: 2px solid #2b4135;
+    outline-offset: 2px;
+}
+
+/* ===== PESAN ERROR PER KOLOM  ===== */
+.field-error {
+    position: relative;
+    display: block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border: 1px solid #ecc6c6;
+    border-radius: 8px;
+    background-color: #f9e6e6;
+    color: #8c2d2d;
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+/* Panah kecil di atas kotak, mirip popup browser */
+.field-error::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 18px;
+    width: 10px;
+    height: 10px;
+    background-color: #f9e6e6;
+    border-top: 1px solid #ecc6c6;
+    border-left: 1px solid #ecc6c6;
+    transform: rotate(45deg);
+}
+
+/* Border kolom yang error ikut berwarna merah */
+.form-group input.is-error {
+    border-color: #c0392b;
 }

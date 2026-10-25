@@ -2,7 +2,7 @@
 session_start();
 date_default_timezone_set('Asia/Jakarta');
 
-// 1. Proteksi Halaman
+// 1. Proteksi Halaman (Pastikan user udah login & cek status admin)
 if (!isset($_SESSION['nama_user'])) {
     header("Location: login.php");
     exit;
@@ -10,16 +10,11 @@ if (!isset($_SESSION['nama_user'])) {
 
 $current_user = $_SESSION['nama_user'];
 $user_inisial = strtoupper(substr($current_user, 0, 1));
-
-// PENGECEKAN ADMIN
 $is_admin = ($current_user === 'Nabil Ramadhan Pradhita' || $current_user === 'Nabil Ramadhan' || strtolower($current_user) === 'admin');
 
-// 2. Hubungkan ke Database File
+// 2. Hubungkan ke Database File & Siapkan Dekripsi Data Memory
 include 'database.php';
 
-// ==========================================
-// --- DISISIPKAN: DEKRIPSI DATA MEMORY ---
-// ==========================================
 $kunci_sistem = "SelaRuangCeritaBersama2026!#$";
 $metode_aes   = "AES-256-CBC";
 $iv_aes       = substr(hash('sha256', $kunci_sistem), 0, 16);
@@ -44,19 +39,8 @@ if (isset($menfess_data) && is_array($menfess_data)) {
         }
     }
 }
-// ==========================================
 
-if (!isset($menfess_data)) $menfess_data = [];
-if (!isset($reports_data)) $reports_data = [];
-if (!isset($poll_data)) {
-    $poll_data = [
-        0 => ['id' => 1, 'opsi' => 'OOP (C++)', 'jumlah_vote' => 0],
-        1 => ['id' => 2, 'opsi' => 'Database', 'jumlah_vote' => 0],
-        2 => ['id' => 3, 'opsi' => 'Pemrograman Web', 'jumlah_vote' => 0],
-        3 => ['id' => 4, 'opsi' => 'Lainnya', 'jumlah_vote' => 0],
-    ];
-}
-
+// Fungsi ngubah format waktu jadi ala sosmed (misal: "5 menit lalu")
 function time_ago($timestamp) {
     $selisih = max(0, time() - (int)$timestamp);
 
@@ -68,12 +52,13 @@ function time_ago($timestamp) {
     return date('d M Y', (int)$timestamp);
 }
 
+// Filter postingan berdasarkan kategori & pencarian kata kunci
 $kategori_aktif = $_GET['kategori'] ?? 'Semua';
 $kata_kunci = trim($_GET['q'] ?? '');
 $edit_post_id = $_GET['edit_post'] ?? '';
 $edit_kom_id = $_GET['edit_kom'] ?? '';
 $show_reply = $_GET['reply_to'] ?? '';
-$total_votes = array_sum(array_map('intval', array_column($poll_data, 'jumlah_vote')));
+
 $filtered_menfess = array_filter($menfess_data, function ($post) use ($kategori_aktif, $kata_kunci) {
     $sesuai_kategori = $kategori_aktif === 'Semua' || ($post['kategori'] ?? '') === $kategori_aktif;
     $teks_pencarian = ($post['pesan'] ?? '') . ' ' . ($post['kategori'] ?? '') . ' ' . ($post['nama'] ?? 'Anonim');
@@ -84,7 +69,7 @@ $filtered_menfess = array_filter($menfess_data, function ($post) use ($kategori_
 
 $data_berubah = false;
 
-// === LETAKKAN KODE PERHITUNGAN DI SINI ===
+// Perhitungan persentase tiap kategori buat widget statistik
 $total_menfess = count($menfess_data);
 $kategori_counts = [
     'Curhat' => 0,
@@ -105,9 +90,8 @@ foreach ($kategori_counts as $kat => $count) {
     $kategori_persen[$kat] = ($total_menfess > 0) ? round(($count / $total_menfess) * 100) : 0;
 }
 arsort($kategori_persen);
-// ==========================================
 
-// 3. SENTRALISASI LOGIKA POST
+// 3. Sentralisasi Logika Post (Proses semua form dari user)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
@@ -116,8 +100,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pesan = trim($_POST['pesan'] ?? '');
         $kategori = $_POST['kategori'] ?? 'Semua';
         $is_anonim = isset($_POST['anonim']) ? 1 : 0;
+        $error_menfess = '';
+        
+        if (empty($pesan)) {
+            $error_menfess = 'Pesan tidak boleh kosong!';
+        } elseif (!in_array($kategori, ['Curhat', 'InfoKelas', 'Teman Belajar', 'Apresiasi'], true)) {
+            $error_menfess = 'Silakan pilih kategori terlebih dahulu!';
+        }
 
-        if (!empty($pesan) && $kategori !== 'Semua') {
+        if ($error_menfess === '' && !empty($pesan) && $kategori !== 'Semua') {
             $post_baru = [
                 'id' => uniqid('post_'),
                 'pesan' => htmlspecialchars($pesan),
@@ -288,25 +279,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data_berubah = true;
     }
     
-    // --- J. Polling ---
-    elseif ($action === 'vote_poll') {
-        $poll_id = (int)($_POST['poll_id'] ?? 0);
-        foreach ($poll_data as $key => $poll) {
-            if ($poll['id'] === $poll_id) {
-                $poll_data[$key]['jumlah_vote']++;
-                $data_berubah = true;
-                break;
-            }
-        }
-    }
+    
 
-        // 4. SIMPAN PERMANEN
+    // 4. Simpan Permanen (Enkripsi ulang kalau ada yang diubah sebelum ditulis ke file)
     if ($data_berubah) {
         if (!isset($account)) $account = []; 
 
-        // ==========================================
-        // --- DISISIPKAN: ENKRIPSI TOTAL SEBELUM TULIS FILE ---
-        // ==========================================
         $menfess_tulis = $menfess_data;
         if (is_array($menfess_tulis)) {
             foreach ($menfess_tulis as $m_key => $post) {
@@ -328,7 +306,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
-        // ==========================================
 
         $isi_file = "<?php\n\n\$account = " . var_export($account, true) . ";\n\n";
         $isi_file .= "\$menfess_data = " . var_export($menfess_tulis, true) . ";\n\n";
@@ -343,7 +320,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -351,8 +327,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sela.</title>
     <link rel="stylesheet" href="dashboard.css">
+    <link rel="icon" type="image/x-icon" href="icon_SELA.ico">
+    <style>
+        /* Notif "Berhasil login" */
+        .toast-success {
+            position: fixed;
+            top: 88px;
+            left: 50%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 18px 10px 12px;
+            background-color: #1c6943;
+            color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(28, 105, 67, 0.25);
+            white-space: nowrap;
+            pointer-events: none;
+            animation: toastMuncul 3.5s ease forwards;
+        }
+
+        .toast-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        @keyframes toastMuncul {
+            0%   { opacity: 0; transform: translate(-50%, -8px); }
+            10%  { opacity: 1; transform: translate(-50%, 0); }
+            80%  { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -8px); }
+        }
+    </style>
 </head>
 <body>
+
+    <!-- Munculin notifikasi sukses login sekali, lalu hapus dari session -->
+    <?php if (!empty($_SESSION['notif_login'])): unset($_SESSION['notif_login']); ?>
+    <div class="toast-success" role="status">
+        <span class="toast-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        Berhasil login
+    </div>
+    <?php endif; ?>
 
     <!-- NAVBAR -->
     <nav class="navbar">
@@ -370,13 +397,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </svg>
                 <div class="quote-slider-viewport">
                     <div class="quote-slider-track">
-                        <!-- Slide 1 -->
                         <div class="quote-slide"><span>Tetap positif, bareng Sela!</span></div>
-                        <!-- Slide 2 -->
                         <div class="quote-slide"><span>Kampus tempat belajar & bertumbuh.</span></div>
-                        <!-- Slide 3 -->
                         <div class="quote-slide"><span>Jangan lupa istirahat hari ini.</span></div>
-                        <!-- Slide 1 (DUPLIKAT untuk efek loop mulus) -->
                         <div class="quote-slide"><span>Tetap positif, bareng Sela!</span></div>
                     </div>
                 </div>
@@ -386,7 +409,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="logout.php" class="dropdown-item text-danger">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                 Logout
-                </a>
+            </a>
         </div>
     </nav>
 
@@ -408,7 +431,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </a>
             
             <ul class="sidebar-menu">
-            <h5 class="sidebar-title">Cari Kategori</h5>
+                <h4 class="sidebar-title">Cari Kategori</h4>
                 <li><a href="dashboard.php?kategori=Semua" class="<?= $kategori_aktif === 'Semua' ? 'active' : '' ?>">Semua</a></li>
                 <li><a href="dashboard.php?kategori=Curhat" class="<?= $kategori_aktif === 'Curhat' ? 'active' : '' ?>">Curhat</a></li>
                 <li><a href="dashboard.php?kategori=InfoKelas" class="<?= $kategori_aktif === 'InfoKelas' ? 'active' : '' ?>">InfoKelas</a></li>
@@ -421,16 +444,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <main class="feed-content">
             
             <!-- FORM KIRIM MENFESS -->
-            <form id="form-menfess" method="POST" action="dashboard.php" class="card create-post">
+            <form id="form-menfess" method="POST" action="dashboard.php" class="card create-post" novalidate>
                 <input type="hidden" name="action" value="kirim_menfess">
                 <div class="post-input-wrapper">
                     <div class="avatar-small"><?= $user_inisial ?></div>
-                    <input type="text" name="pesan" placeholder="Tulis menfess, pertanyaan, atau informasi..." class="post-input" required autocomplete="off">
+                    <input type="text" name="pesan" placeholder="Tulis menfess, pertanyaan, atau informasi..." class="post-input" required autocomplete="off"
+                        value="<?= htmlspecialchars($_POST['pesan'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                 </div>
+
+                <?php if (!empty($error_menfess)): ?>
+                    <span class="field-error"><?= htmlspecialchars($error_menfess, ENT_QUOTES, 'UTF-8') ?></span>
+                <?php endif; ?>
+
                 <div class="post-actions">
                     <div class="post-actions-left">
                         <select name="kategori" class="kategori-select" required>
-                            <option value="" disabled selected>Kategori: Semua ▾</option>
+                            <option value="" disabled selected>Kategori</option>
                             <option value="Curhat">Curhat</option>
                             <option value="InfoKelas">InfoKelas</option>
                             <option value="Teman Belajar">Teman Belajar</option>
@@ -447,7 +476,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php foreach ($filtered_menfess as $row): ?>
                     <?php 
                         $post_id = $row['id'] ?? '';
-                        $nama_asli = $row['nama'] ?? null; // Null jika diposting sebagai anonim
+                        $nama_asli = $row['nama'] ?? null; 
                         $is_post_owner = ($nama_asli !== null && $nama_asli === $current_user);
                         
                         $nama_tampil = $nama_asli ? htmlspecialchars($nama_asli) : 'Anonim';
@@ -639,48 +668,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
             
         </main>
-            <div>
+        <div>
             <div class="card widget-card">
-                    <div class="widget-header" style="margin-bottom: 20px;">
-                        <h4 class="widget-title">Kategori Populer</h4>
-                    </div>
-                    <ul class="populer-list">
-                        <?php foreach ($kategori_persen as $nama_kategori => $persen): ?>
-                            <?php 
-                                // Warna dan Icon disesuaikan mirip referensi gambar
-                                if ($nama_kategori == 'Curhat') { 
-                                    $icon_color = '#009688'; $bg_color = '#e0f2f1'; 
-                                } elseif ($nama_kategori == 'InfoKelas') { 
-                                    $icon_color = '#ff9800'; $bg_color = '#fff3e0'; 
-                                } elseif ($nama_kategori == 'Teman Belajar') { 
-                                    $icon_color = '#2196f3'; $bg_color = '#e3f2fd'; 
-                                } else { 
-                                    $icon_color = '#e91e63'; $bg_color = '#fce4ec'; 
-                                }
-                            ?>
-                            <li class="populer-item">
-                                <div class="populer-kiri">
-                                    <div class="populer-icon" style="background-color: <?= $bg_color ?>; color: <?= $icon_color ?>;">
-                                        <?php if ($nama_kategori == 'Curhat'): ?>
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                                        <?php elseif ($nama_kategori == 'InfoKelas'): ?>
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                        <?php elseif ($nama_kategori == 'Teman Belajar'): ?>
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                                        <?php else: ?>
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                                        <?php endif; ?>
-                                    </div>
-                                    <span class="populer-nama"><?= htmlspecialchars($nama_kategori) ?></span>
-                                </div>
-                                <span class="populer-persen"><?= $persen ?>%</span>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
+                <div class="widget-header" style="margin-bottom: 20px;">
+                    <h4 class="widget-title">Kategori Populer</h4>
                 </div>
-                
+                <ul class="populer-list">
+                    <?php foreach ($kategori_persen as $nama_kategori => $persen): ?>
+                        <?php 
+                            if ($nama_kategori == 'Curhat') { 
+                                $icon_color = '#009688'; $bg_color = '#e0f2f1'; 
+                            } elseif ($nama_kategori == 'InfoKelas') { 
+                                $icon_color = '#ff9800'; $bg_color = '#fff3e0'; 
+                            } elseif ($nama_kategori == 'Teman Belajar') { 
+                                $icon_color = '#2196f3'; $bg_color = '#e3f2fd'; 
+                            } else { 
+                                $icon_color = '#e91e63'; $bg_color = '#fce4ec'; 
+                            }
+                        ?>
+                        <li class="populer-item">
+                            <div class="populer-kiri">
+                                <div class="populer-icon" style="background-color: <?= $bg_color ?>; color: <?= $icon_color ?>;">
+                                    <?php if ($nama_kategori == 'Curhat'): ?>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                                    <?php elseif ($nama_kategori == 'InfoKelas'): ?>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    <?php elseif ($nama_kategori == 'Teman Belajar'): ?>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    <?php else: ?>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    <?php endif; ?>
+                                </div>
+                                <span class="populer-nama"><?= htmlspecialchars($nama_kategori) ?></span>
+                            </div>
+                            <span class="populer-persen"><?= $persen ?>%</span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
+        </div>
         </aside>
     </div>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <span>&copy; 2026 Sela. Ruang cerita  kelas.</span>
+            <span class="footer-quote">Saling sapa di sela waktu kuliah.</span>
+        </div>
+    </footer>
 </body>
 </html>

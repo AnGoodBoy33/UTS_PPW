@@ -26,10 +26,115 @@ $account = array (
     'nama' => 'qWIVxHq5VL5j4ka8cVyRXw==',
     'password' => '$2y$10$JYW0stRRES5z2T/t4woJVO59NEJDs1n5XJKm/wMJ7R/7UYZG9Bk.O',
   ),
+  'QqkGr3YSET7ZUmfZE+mVMA==' => 
+  array (
+    'nama' => 'pYmgClhc2UMYTmfN9Xf52A==',
+    'password' => '$2y$10$szv7M2MOP4/Sywz.vTMPcugH1npYd1SzTFaM7VlLsbyw7S3E6cole',
+  ),
+  'BfgItORdfqgtEH6H8Aljcw==' => 
+  array (
+    'nama' => 'qcjsYy+YptwvrLjUEGvtiQ==',
+    'password' => '$2y$10$qiAaSBVaP6PC6AvFdiKVkOSUGDb3sznzXxVPehOyG8293fbzuBm2K',
+  ),
 );
 
 $menfess_data = array (
   0 => 
+  array (
+    'id' => 'post_6ade1802bdb7a',
+    'pesan' => 'qNB/tHDnHu0/oVl+Q2rolA==',
+    'kategori' => 'Curhat',
+    'is_anonim' => 0,
+    'waktu' => 1792940034,
+    'likes' => 0,
+    'liked_by' => 
+    array (
+    ),
+    'komentar' => 
+    array (
+    ),
+    'nama' => 'qWIVxHq5VL5j4ka8cVyRXw==',
+  ),
+  1 => 
+  array (
+    'id' => 'post_6ade0d3ce7c18',
+    'pesan' => '0JyLLPSDA4EKa1eKaJ+AHwh2MhGS34viFLKPiyL5Ss0ncKRGpMkIwME5z5F8JGif',
+    'kategori' => 'Curhat',
+    'is_anonim' => 0,
+    'waktu' => 1792937276,
+    'likes' => 0,
+    'liked_by' => 
+    array (
+    ),
+    'komentar' => 
+    array (
+    ),
+    'nama' => 'qcjsYy+YptwvrLjUEGvtiQ==',
+  ),
+  2 => 
+  array (
+    'id' => 'post_6ade0c1bf30ce',
+    'pesan' => 'j2EuAlEMOcTrPsuU0wpS9Fx9m5suok3h5BLI75xP44aWO1Mgi8GGOskrv1vK4/JHCzF4uvRvArZAtyj4VDym0Q==',
+    'kategori' => 'Curhat',
+    'is_anonim' => 0,
+    'waktu' => 1792936987,
+    'likes' => 0,
+    'liked_by' => 
+    array (
+    ),
+    'komentar' => 
+    array (
+    ),
+    'nama' => 'qWIVxHq5VL5j4ka8cVyRXw==',
+  ),
+  3 => 
+  array (
+    'id' => 'post_6adccd9c64d1b',
+    'pesan' => 'atIsAXXacM9JRvsxtbQRBA==',
+    'kategori' => 'Curhat',
+    'is_anonim' => 0,
+    'waktu' => 1792855452,
+    'likes' => 0,
+    'liked_by' => 
+    array (
+    ),
+    'komentar' => 
+    array (
+    ),
+    'nama' => 'z93f5YtiQlFSj/a6SsMGXHKtcwu8U/jAyCrEY0ylvbc=',
+  ),
+  4 => 
+  array (
+    'id' => 'post_6adcc5f73611b',
+    'pesan' => '0gv/0lUAvP3MmBaGF35iIg==',
+    'kategori' => 'Apresiasi',
+    'is_anonim' => 1,
+    'waktu' => 1792853495,
+    'likes' => 0,
+    'liked_by' => 
+    array (
+    ),
+    'komentar' => 
+    array (
+    ),
+  ),
+  5 => 
+  array (
+    'id' => 'post_6adcc5ec32126',
+    'pesan' => '8CD1Vb7RqJ5kjtl4ywuVRw==',
+    'kategori' => 'Curhat',
+    'is_anonim' => 0,
+    'waktu' => 1792853484,
+    'likes' => 0,
+    'liked_by' => 
+    array (
+    ),
+    'komentar' => 
+    array (
+    ),
+    'nama' => 'pYmgClhc2UMYTmfN9Xf52A==',
+  ),
+  6 => 
   array (
     'id' => 'post_6adcb9716015a',
     'pesan' => '7nZWqO94gI0LXm35Ix1wZg==',
@@ -45,7 +150,7 @@ $menfess_data = array (
     ),
     'nama' => 'qWIVxHq5VL5j4ka8cVyRXw==',
   ),
-  1 => 
+  7 => 
   array (
     'id' => 'post_6adcb4113e499',
     'pesan' => 'UEMYHH1SXxvVT4vJNRTgkQ==',
@@ -61,7 +166,7 @@ $menfess_data = array (
     ),
     'nama' => 'qWIVxHq5VL5j4ka8cVyRXw==',
   ),
-  2 => 
+  8 => 
   array (
     'id' => 'post_6adcb0d3242d8',
     'pesan' => 'wLktzFVCNR6LgEJN4VmjXQ==',
@@ -77,7 +182,7 @@ $menfess_data = array (
     ),
     'nama' => 'qWIVxHq5VL5j4ka8cVyRXw==',
   ),
-  3 => 
+  9 => 
   array (
     'id' => 'post_6adcb0ba37296',
     'pesan' => 'wLktzFVCNR6LgEJN4VmjXQ==',
@@ -93,7 +198,7 @@ $menfess_data = array (
     ),
     'nama' => 'qWIVxHq5VL5j4ka8cVyRXw==',
   ),
-  4 => 
+  10 => 
   array (
     'id' => 'post_6adcb0b40eb10',
     'pesan' => 'wLktzFVCNR6LgEJN4VmjXQ==',
@@ -109,7 +214,7 @@ $menfess_data = array (
     ),
     'nama' => 'qWIVxHq5VL5j4ka8cVyRXw==',
   ),
-  5 => 
+  11 => 
   array (
     'id' => 'post_6adcb0a633528',
     'pesan' => 'wLktzFVCNR6LgEJN4VmjXQ==',
@@ -125,7 +230,7 @@ $menfess_data = array (
     ),
     'nama' => 'qWIVxHq5VL5j4ka8cVyRXw==',
   ),
-  6 => 
+  12 => 
   array (
     'id' => 'post_6adcb09e4fc0f',
     'pesan' => 'wLktzFVCNR6LgEJN4VmjXQ==',
@@ -141,7 +246,7 @@ $menfess_data = array (
     ),
     'nama' => 'qWIVxHq5VL5j4ka8cVyRXw==',
   ),
-  7 => 
+  13 => 
   array (
     'id' => 'post_6adb6fb72ea19',
     'pesan' => '2XAyLqM57k4an75CnnjbZA==',
@@ -156,7 +261,7 @@ $menfess_data = array (
     array (
     ),
   ),
-  8 => 
+  14 => 
   array (
     'id' => 'post_6adb6fade90a9',
     'pesan' => 'sdl6v157/Y4KUbNihT+rlw==',
@@ -173,7 +278,7 @@ $menfess_data = array (
     ),
     'nama' => 'XXqRmNNfinU1Ro0BcHECEA==',
   ),
-  9 => 
+  15 => 
   array (
     'id' => 'post_6adb6f7219ab2',
     'pesan' => 'aaYwkkQrbvYiMwQDWbNsbw==',
@@ -198,7 +303,7 @@ $menfess_data = array (
     ),
     'nama' => 'z93f5YtiQlFSj/a6SsMGXHKtcwu8U/jAyCrEY0ylvbc=',
   ),
-  10 => 
+  16 => 
   array (
     'id' => 'post_6adb6f6ab5940',
     'pesan' => 'On6k+qOnpdfdrrRcLLtp1A==',
@@ -223,31 +328,13 @@ $reports_data = array (
     'tipe' => 'post_utama',
     'waktu_lapor' => 1792765861,
   ),
-);
-
-$poll_data = array (
-  0 => 
-  array (
-    'id' => 1,
-    'opsi' => 'OOP (C++)',
-    'jumlah_vote' => 6,
-  ),
   1 => 
   array (
-    'id' => 2,
-    'opsi' => 'Database',
-    'jumlah_vote' => 5,
-  ),
-  2 => 
-  array (
-    'id' => 3,
-    'opsi' => 'Pemrograman Web',
-    'jumlah_vote' => 6,
-  ),
-  3 => 
-  array (
-    'id' => 4,
-    'opsi' => 'Lainnya',
-    'jumlah_vote' => 7,
+    'pelapor' => 'zaki soleh',
+    'post_id' => 'post_6adccd9c64d1b',
+    'tipe' => 'post_utama',
+    'waktu_lapor' => 1792936962,
   ),
 );
+
+$poll_data = NULL;
