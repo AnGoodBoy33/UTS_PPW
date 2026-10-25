@@ -15,7 +15,7 @@ $pesan = $_GET['pesan'] ?? '';
 $errors = [];
 $loginBerhasil = false;
 
-// Deteksi browser: Firefox belum support -webkit-text-security, jadi disesuaikan
+// Deteksi browser
 $pakaiSamarkan = stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Firefox') === false;
 
 // Mulai proses kalau user nekan tombol masuk
@@ -65,11 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['email_user'] = $email;
             $_SESSION['notif_login'] = true;
 
-            // Kalau user centang 'remember me', simpan juga di cookie
-            if ($rememberMe === '1') {
-                setcookie("user_ingat", $nama_asli, time() + (86400 * 30), "/");
-                setcookie("email_ingat", $email, time() + (86400 * 30), "/");
-            }
 
             $loginBerhasil = true;
         } else {
@@ -86,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk ke Sela.</title>
     
-    <!-- Kasih jeda dikit sebelum pindah ke dashboard kalau sukses login -->
+    <!-- jeda sebelum pindah ke dashboard kalau sukses login -->
     <?php if ($loginBerhasil): ?>
         <meta http-equiv="refresh" content="2;url=dashboard.php">
     <?php endif; ?>
@@ -155,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
                 </div>
 
-                <!-- Input Password (Ada fitur 'lihat password' kalau bukan di Firefox) -->
+                <!-- Input Password -->
                 <div class="form-group">
                     <label for="pswd">Kata sandi</label>
                     <div class="pw-wrap">
@@ -190,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </section>
     </main>
 
-    <!-- Bagian Paling Bawah -->
+    <!-- Footer -->
     <footer class="site-footer">
         <div class="footer-inner">
             <span>&copy; 2026 Sela. Ruang cerita kelas.</span>
