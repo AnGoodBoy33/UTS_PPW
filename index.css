@@ -448,13 +448,6 @@ footer {
     100% { transform: scale(3.2); opacity: 0; }
 }
 
-.slider-head-time {
-    margin-left: auto;
-    font-size: 12px;
-    font-weight: 400;
-    color: var(--text-muted);
-}
-
 /*  INDIKATOR TITIK SLIDESHOW  */
 .slider-dots {
     display: flex;

@@ -153,10 +153,6 @@
                 <div class="slider-head">
                     <span class="live-dot"></span>
                     <span class="slider-head-title">Menfess terbaru</span>
-                    
-                    <?php if ($waktu_terakhir !== null): ?>
-                        <span class="slider-head-time">Diposting <?= sela_waktu_lalu($waktu_terakhir) ?></span>
-                    <?php endif; ?>
                 </div>
 
                 <!-- Wadah utama slideshow -->
