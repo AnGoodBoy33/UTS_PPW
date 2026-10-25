@@ -6,6 +6,7 @@
     <title>Halaman Awal - Sela.</title>
     <!-- Hubungkan ke file CSS baru khusus halaman utama -->
     <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/x-icon" href="icon_SELA.ico">
 </head>
 <body>
     <!-- Navigasi -->
