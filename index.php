@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Halaman Awal - Sela.</title>
-    <!-- Hubungkan ke file CSS baru khusus halaman utama -->
     <link rel="stylesheet" href="index.css">
     <link rel="icon" type="image/x-icon" href="icon_SELA.ico">
 </head>
@@ -38,7 +37,7 @@
         <div class="hero-right">
             <div class="card-wrapper">
                 <?php
-                // SLIDESHOW: Tarik menfess terbaru dari database.php (didekripsi seperti di dashboard)
+                // SLIDESHOW: Tarik menfess terbaru dari database.php (didekripsi)
                 date_default_timezone_set('Asia/Jakarta');
                 include 'database.php';
 
@@ -82,7 +81,7 @@
                     return date('j', $timestamp) . ' ' . $bulan[(int)date('n', $timestamp) - 1] . ' ' . date('Y', $timestamp);
                 }
 
-                // Logo kategori: warna dan ikon disesuaikan sama widget "Kategori Populer" di dashboard
+                // Logo kategori
                 $kategori_logo = [
                     'Curhat' => [
                         'kelas' => 'kat-curhat',
@@ -109,7 +108,7 @@
                 // Postingan yang sedang dilaporkan tidak ditampilkan di halaman depan
                 $id_dilaporkan = array_column($reports_data, 'post_id');
 
-                // Cari tiga menfess terbaru yang aman buat dipamerin
+                // Cari tiga menfess terbaru 
                 $kandidat = [];
                 foreach ($menfess_data as $post) {
                     if (!in_array($post['id'], $id_dilaporkan, true)) {
