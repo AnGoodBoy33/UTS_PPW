@@ -41,12 +41,27 @@ $menfess_data = array (
     'kategori' => 'Curhat',
     'is_anonim' => 0,
     'waktu' => 1792855452,
-    'likes' => 0,
+    'likes' => 1,
     'liked_by' => 
     array (
+      0 => 'Nabil Ramadhan Pradhita',
     ),
     'komentar' => 
     array (
+      0 => 
+      array (
+        'id' => 'kom_6addf625eba8a',
+        'nama' => 'z93f5YtiQlFSj/a6SsMGXHKtcwu8U/jAyCrEY0ylvbc=',
+        'pesan' => 'wLktzFVCNR6LgEJN4VmjXQ==',
+        'waktu' => 1792931365,
+      ),
+      1 => 
+      array (
+        'id' => 'kom_6addf62bcaa47',
+        'nama' => 'z93f5YtiQlFSj/a6SsMGXHKtcwu8U/jAyCrEY0ylvbc=',
+        'pesan' => '1YqTF41FBlwmL4NnOA4jVg==',
+        'waktu' => 1792931371,
+      ),
     ),
     'nama' => 'z93f5YtiQlFSj/a6SsMGXHKtcwu8U/jAyCrEY0ylvbc=',
   ),
@@ -57,9 +72,10 @@ $menfess_data = array (
     'kategori' => 'Apresiasi',
     'is_anonim' => 1,
     'waktu' => 1792853495,
-    'likes' => 0,
+    'likes' => 1,
     'liked_by' => 
     array (
+      0 => 'Nabil Ramadhan Pradhita',
     ),
     'komentar' => 
     array (
@@ -72,9 +88,10 @@ $menfess_data = array (
     'kategori' => 'Curhat',
     'is_anonim' => 0,
     'waktu' => 1792853484,
-    'likes' => 0,
+    'likes' => 1,
     'liked_by' => 
     array (
+      0 => 'Nabil Ramadhan Pradhita',
     ),
     'komentar' => 
     array (
@@ -88,9 +105,10 @@ $menfess_data = array (
     'kategori' => 'Apresiasi',
     'is_anonim' => 0,
     'waktu' => 1792850289,
-    'likes' => 0,
+    'likes' => 1,
     'liked_by' => 
     array (
+      0 => 'Nabil Ramadhan Pradhita',
     ),
     'komentar' => 
     array (
