@@ -83,7 +83,7 @@ body {
     align-items: center;
 }
 
-/* Panel Kiri (Sage Card) */
+/* Panel Kiri */
 .story-panel {
     background-color: #eaede6;
     border-radius: 12px;
@@ -307,35 +307,20 @@ body {
     font-size: 13px;
 }
 
-@media (max-width: 900px) {
-    .main-container {
-        grid-template-columns: 1fr;
-        gap: 40px;
-        padding: 32px 24px;
-    }
-    .story-panel {
-        min-height: auto;
-        gap: 40px;
-    }
-}
-
-/* ===== SHOW PASSWORD ===== */
+/*  SHOW PASSWORD  */
 .form-group .pw-wrap {
     position: relative;
 }
 
-/* Input tetap type="text", isinya disamarkan dengan -webkit-text-security */
 .form-group .pw-wrap .pw-field {
     padding-right: 46px;
     -webkit-text-security: disc;
 }
 
-/* :checked → penyamaran dilepas, sandi terlihat */
 .form-group .pw-wrap:has(.pw-toggle:checked) .pw-field {
     -webkit-text-security: none;
 }
 
-/* Checkbox disembunyikan, tapi tetap bisa difokus dengan Tab */
 .form-group .pw-wrap .pw-toggle {
     position: absolute;
     width: 1px;
@@ -347,7 +332,6 @@ body {
     pointer-events: none;
 }
 
-/* Diberi prefix .form-group agar mengalahkan `.form-group label` */
 .form-group .pw-eye {
     position: absolute;
     top: 50%;
@@ -372,7 +356,6 @@ body {
     background-color: #eaede6;
 }
 
-/* :active → tombol mengecil dan berubah warna saat ditekan */
 .form-group .pw-eye:active {
     transform: translateY(-50%) scale(0.88);
     background-color: #dfe5dc;
@@ -388,7 +371,6 @@ body {
     stroke-linejoin: round;
 }
 
-/* Garis coret muncul saat checkbox dicentang */
 .pw-slash {
     opacity: 0;
     transition: opacity 0.2s;
@@ -398,13 +380,12 @@ body {
     opacity: 1;
 }
 
-/* Fokus keyboard (Tab) ditandai pada tombol mata */
 .form-group .pw-wrap .pw-toggle:focus-visible + .pw-eye {
     outline: 2px solid #2b4135;
     outline-offset: 2px;
 }
 
-/* ===== PESAN ERROR PER KOLOM  ===== */
+/*  PESAN ERROR PER KOLOM   */
 .field-error {
     position: relative;
     display: block;
@@ -418,7 +399,7 @@ body {
     line-height: 1.5;
 }
 
-/* Panah kecil di atas kotak, mirip popup browser */
+
 .field-error::before {
     content: "";
     position: absolute;
@@ -432,7 +413,20 @@ body {
     transform: rotate(45deg);
 }
 
-/* Border kolom yang error ikut berwarna merah */
+/* Border error  */
 .form-group input.is-error {
     border-color: #c0392b;
+}
+
+/*  RESPONSIVE UNTUK LAYAR KECIL  */
+@media (max-width: 900px) {
+    .main-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 32px 24px;
+    }
+    .story-panel {
+        min-height: auto;
+        gap: 40px;
+    }
 }

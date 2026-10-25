@@ -21,7 +21,7 @@ body {
     line-height: 1.6;
 }
 
-/* ===== PENGATURAN FONT & TEKS ===== */
+/* PENGATURAN FONT & TEKS  */
 h1, h2, h3, .features-title h2 { 
     font-family: var(--font-serif); 
 }
@@ -31,7 +31,7 @@ a {
     color: inherit; 
 }
 
-/* ===== NAVBAR ===== */
+/*  NAVBAR  */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -72,7 +72,7 @@ a {
     padding-bottom: 2px; 
 }
 
-/* ===== DESAIN TOMBOL UMUM ===== */
+/*  DESAIN TOMBOL UMUM  */
 .btn {
     padding: 10px 20px;
     border-radius: 4px;
@@ -103,7 +103,7 @@ a {
     color: #FFF; 
 }
 
-/* ===== BAGIAN HERO (LAYAR AWAL) ===== */
+/*  LAYAR AWAL  */
 .hero {
     display: flex;
     padding: 60px 5%;
@@ -142,7 +142,7 @@ a {
     gap: 15px; 
 }
 
-/* ===== KARTU SLIDESHOW DI KANAN ===== */
+/*  KARTU SLIDESHOW DI KANAN  */
 .card-wrapper {
     background-color: var(--bg-card);
     padding: 40px;
@@ -223,7 +223,7 @@ a {
     font-family: var(--font-serif); 
 }
 
-/* ===== BAGIAN FITUR-FITUR DI BAWAH ===== */
+/*  BAGIAN FITUR-FITUR DI BAWAH  */
 .features { 
     background-color: #F6F6F2; 
     padding: 60px 5%; 
@@ -285,7 +285,7 @@ a {
     color: var(--text-muted); 
 }
 
-/* ===== FOOTER ===== */
+/*  FOOTER  */
 footer { 
     display: flex; 
     justify-content: space-between; 
@@ -298,9 +298,7 @@ footer {
     font-family: var(--font-serif); 
 }
 
-/* ===== ANIMASI SLIDESHOW KARTU ===== */
-
-/* Jendela pantau yang nyembunyiin kartu slide lainnya */
+/*  ANIMASI SLIDESHOW KARTU  */
 .slider-viewport {
     width: 100%;
     overflow: hidden;
@@ -308,20 +306,17 @@ footer {
     border-radius: 6px;
 }
 
-/* Rel panjang tempat semua kartu diletakkan berjejer (Lebar 400% = 4 slide) */
 .slider-track {
     display: flex;
     width: 400%; 
     animation: autoSlide 12s infinite; 
 }
 
-/* Masing-masing kartu ukurannya rata dibagi 4 (25%) */
 .slide {
     width: 25%;
     flex-shrink: 0;
 }
 
-/* Keyframes geser-geser kartu */
 @keyframes autoSlide {
     0%, 20%   { transform: translateX(0); }
     25%, 45%  { transform: translateX(-25%); }
@@ -330,7 +325,7 @@ footer {
     100%      { transform: translateX(0); }
 }
 
-/* ===== ANIMASI GARIS BAWAH MENU NAVBAR ===== */
+/*  ANIMASI GARIS BAWAH MENU NAVBAR  */
 .nav-link {
     position: relative;
     padding-bottom: 2px;
@@ -341,7 +336,6 @@ footer {
     border-bottom: none;
 }
 
-/* Elemen garis di bawah teks menu yang muncul kalau disorot */
 .nav-link::after {
     content: '';
     position: absolute;
@@ -353,27 +347,23 @@ footer {
     transition: width 0.3s ease-in-out;
 }
 
-/* Menu yang lagi aktif garisnya penuh 100% */
 .nav-link.active::after {
     width: 100%;
 }
 
-/* Biar garis aktif ngilang pas kursor nyorot menu lain */
 .nav-right:hover .nav-link.active::after {
     width: 0;
 }
 
-/* Biar garis balik lagi ke awal */
 .nav-right:hover .nav-link.active:hover::after {
     width: 100%;
 }
 
-/* Efek garis jalan perlahan pas menu disorot */
 .nav-link:hover::after {
     width: 100%;
 }
 
-/* ===== TEMA WARNA & IKON KATEGORI SLIDESHOW ===== */
+/*  TEMA WARNA & IKON KATEGORI SLIDESHOW  */
 .card-label {
     display: inline-flex;
     align-items: center;
@@ -404,7 +394,6 @@ footer {
 .tone-teman     { --accent: #2196f3; }
 .tone-apresiasi { --accent: #e91e63; }
 
-/* Hiasan tanda kutip samar di tepi kartu */
 .story-card {
     position: relative;
     overflow: hidden;
@@ -424,7 +413,7 @@ footer {
     pointer-events: none;
 }
 
-/* ===== HEADER SLIDESHOW "MENFESS TERBARU" ===== */
+/*  HEADER SLIDESHOW "MENFESS TERBARU"  */
 .slider-head {
     display: flex;
     align-items: center;
@@ -436,7 +425,6 @@ footer {
     color: var(--primary-color);
 }
 
-/* Titik berkedip kaya status "LIVE" */
 .live-dot {
     position: relative;
     width: 8px;
@@ -467,7 +455,7 @@ footer {
     color: var(--text-muted);
 }
 
-/* ===== INDIKATOR TITIK SLIDESHOW ===== */
+/*  INDIKATOR TITIK SLIDESHOW  */
 .slider-dots {
     display: flex;
     justify-content: center;

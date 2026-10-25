@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-/* ===== RESET BAWAAN ===== */
-/* Bersihin margin dan padding bawaan browser biar ukurannya presisi */
+/*  RESET BAWAAN  */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -18,7 +17,7 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* ===== NAVBAR ATAS ===== */
+/*  NAVBAR ATAS  */
 .topbar {
     border-bottom: 1px solid #e4e3dc;
     padding: 20px max(48px, calc((100% - 1084px) / 2));
@@ -65,7 +64,7 @@ body {
     opacity: 0.8;
 }
 
-/* ===== LAYOUT HALAMAN UTAMA ===== */
+/*  LAYOUT HALAMAN UTAMA  */
 .register-container {
     flex: 1;
     max-width: 1180px;
@@ -78,7 +77,7 @@ body {
     align-items: center;
 }
 
-/* ===== PANEL KIRI (Kartu hijau sage buat kutipan cerita) ===== */
+/*  PANEL KIRI  */
 .story-panel {
     background-color: #eaede6;
     border-radius: 12px;
@@ -152,7 +151,7 @@ body {
     color: #6c736e;
 }
 
-/* ===== PANEL KANAN (Area Form Pendaftaran) ===== */
+/*  PANEL KANAN (Area Form Pendaftaran)  */
 .form-panel {
     max-width: 380px;
     width: 100%;
@@ -184,7 +183,7 @@ body {
     margin-bottom: 28px;
 }
 
-/* ===== KOTAK PESAN ERROR UMUM ===== */
+/*  KOTAK PESAN ERROR  */
 .error-message {
     padding: 10px 14px;
     border-radius: 8px;
@@ -196,7 +195,7 @@ body {
     line-height: 1.5;
 }
 
-/* ===== GAYA INPUT FORM ===== */
+/*  GAYA INPUT FORM  */
 .register-form {
     width: 100%;
 }
@@ -242,7 +241,7 @@ body {
     line-height: 1.5;
 }
 
-/* ===== TOMBOL SUBMIT ===== */
+/*  TOMBOL SUBMIT  */
 .submit-button {
     width: 100%;
     padding: 13.5px;
@@ -262,7 +261,6 @@ body {
     background-color: #213329;
 }
 
-/* Teks ajakan masuk kalau udah punya akun */
 .login-prompt {
     text-align: center;
     font-size: 13px;
@@ -280,37 +278,21 @@ body {
     text-decoration: underline;
 }
 
-/* ===== RESPONSIVE UNTUK LAYAR KECIL ===== */
-@media (max-width: 900px) {
-    .register-container {
-        grid-template-columns: 1fr;
-        gap: 40px;
-        padding: 32px 24px;
-    }
 
-    .story-panel {
-        min-height: auto;
-        gap: 40px;
-    }
-}
-
-/* ===== FITUR LIHAT PASSWORD (MATA) ===== */
+/*  FITUR LIHAT PASSWORD (MATA)  */
 .form-group .pw-wrap {
     position: relative;
 }
 
-/* Biar ikon matanya ga ketimpa sama teks sandi, kasih jarak di kanan */
 .form-group .pw-wrap .pw-field {
     padding-right: 46px;
     -webkit-text-security: disc;
 }
 
-/* Kalau tombol mata diklik (checked), buka penyamaran teksnya */
 .form-group .pw-wrap:has(.pw-toggle:checked) .pw-field {
     -webkit-text-security: none;
 }
 
-/* Checkbox aslinya diumpetin tapi tetep bisa dipencet pake tombol Tab di keyboard */
 .form-group .pw-wrap .pw-toggle {
     position: absolute;
     width: 1px;
@@ -322,7 +304,6 @@ body {
     pointer-events: none;
 }
 
-/* Posisi dan desain ikon mata */
 .form-group .pw-eye {
     position: absolute;
     top: 50%;
@@ -347,7 +328,6 @@ body {
     background-color: #eaede6;
 }
 
-/* Animasi pas ikon mata ditekan */
 .form-group .pw-eye:active {
     transform: translateY(-50%) scale(0.88);
     background-color: #dfe5dc;
@@ -363,24 +343,21 @@ body {
     stroke-linejoin: round;
 }
 
-/* Garis coret mata disembunyikan dulu */
 .pw-slash {
     opacity: 0;
     transition: opacity 0.2s;
 }
 
-/* Garis coret muncul kalau sandi lagi kelihatan */
 .form-group .pw-wrap:has(.pw-toggle:checked) .pw-slash {
     opacity: 1;
 }
 
-/* Penanda visual kalau lagi pakai navigasi keyboard */
 .form-group .pw-wrap .pw-toggle:focus-visible + .pw-eye {
     outline: 2px solid #2b4135;
     outline-offset: 2px;
 }
 
-/* ===== PESAN ERROR PER KOLOM (Model Tooltip) ===== */
+/*  PESAN ERROR PER KOLOM */
 .field-error {
     position: relative;
     display: block;
@@ -394,7 +371,6 @@ body {
     line-height: 1.5;
 }
 
-/* Bikin segitiga kecil di atas pesan error biar kaya balon teks */
 .field-error::before {
     content: "";
     position: absolute;
@@ -408,12 +384,11 @@ body {
     transform: rotate(45deg);
 }
 
-/* Warna border kotak input jadi merah kalau isinya salah */
 .form-group input.is-error {
     border-color: #c0392b;
 }
 
-/* ===== FOOTER ===== */
+/*  FOOTER  */
 .site-footer {
     border-top: 1px solid #e4e3dc;
     padding: 22px 48px;
@@ -434,4 +409,18 @@ body {
     font-family: Georgia, 'Times New Roman', serif;
     font-style: italic;
     font-size: 13px;
+}
+
+/*  RESPONSIVE UNTUK LAYAR KECIL  */
+@media (max-width: 900px) {
+    .register-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 32px 24px;
+    }
+
+    .story-panel {
+        min-height: auto;
+        gap: 40px;
+    }
 }
