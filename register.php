@@ -1,20 +1,21 @@
 <?php
 $errors = [];
 
-// Firefox belum mendukung -webkit-text-security, jadi di sana dipakai input password biasa
+// Deteksi browser: Firefox belum support -webkit-text-security, jadi di sana dipakai tipe password biasa[cite: 5]
 $pakaiSamarkan = stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Firefox') === false;
 
-// KUNCI ENKRIPSI AES-256 (Disisipkan)
+// Siapkan kunci brankas buat enkripsi datanya nanti[cite: 5]
 $kunci_sistem = "SelaRuangCeritaBersama2026!#$";
 $metode_aes   = "AES-256-CBC";
 $iv_aes       = substr(hash('sha256', $kunci_sistem), 0, 16);
 
+// Kalau form pendaftaran disubmit, jalankan cek isi datanya[cite: 5]
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama_lengkap = trim($_POST['fullname'] ?? '');
     $email = trim($_POST['mail'] ?? '');
     $password = $_POST['pswd'] ?? '';
 
-    // Validasi per kolom, pesan ditampilkan di bawah kolom yang bermasalah
+    // Cek satu-satu isian form, kalau ada yang kosong atau salah format, kasih pesan error[cite: 5]
     if ($nama_lengkap === '') {
         $errors['fullname'] = 'Nama tidak boleh kosong!';
     }
@@ -31,10 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['pswd'] = 'Password harus minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan simbol.';
     }
 
+    // Kalau semua isian form aman dan gak ada error, lanjut ke database[cite: 5]
     if (empty($errors)) {
-        // Ambil data database yang sudah ada (termasuk menfess & polling yang ada)
         include 'database.php';
 
+        // Pancing variabel database biar ga error (nilai default) kalau file database-nya masih kosong[cite: 5]
         if (!isset($account) || !is_array($account)) {
             $account = [];
         }
@@ -49,20 +51,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ];
         }
 
-        // --- ENKRIPSI DATA FORM SEBELUM DI-CHECK & DI-INPUT (Disisipkan) ---
+        // Enkripsi email dan nama sebelum dicek dan disimpan biar aman[cite: 5]
         $email_aman = openssl_encrypt($email, $metode_aes, $kunci_sistem, 0, $iv_aes);
         $nama_aman  = openssl_encrypt($nama_lengkap, $metode_aes, $kunci_sistem, 0, $iv_aes);
 
+        // Cek dulu, jangan-jangan emailnya udah pernah kedaftar sebelumnya[cite: 5]
         if (isset($account[$email_aman]) || isset($account[$email])) {
             $errors['mail'] = 'Email sudah terdaftar. Silakan gunakan email lain.';
         } else {
-            // Tambahkan akun baru dengan data terenkripsi
+            // Kalau belum, simpan akun baru beserta password yang udah di-hash[cite: 5]
             $account[$email_aman] = [
                 "nama" => $nama_aman,
                 "password" => password_hash($password, PASSWORD_DEFAULT)
             ];
 
-            // TULIS ULANG DATABASE DENGAN MENYERTAKAN AKUN + MENFESS YANG ADA
+            // Tulis ulang seluruh data ke dalam file database.php (termasuk post, polling, dll biar ga ilang)[cite: 5]
             $kontenBaru = "<?php\n\n";
             $kontenBaru .= "\$account = " . var_export($account, true) . ";\n\n";
             $kontenBaru .= "\$menfess_data = " . var_export($menfess_data, true) . ";\n\n";
@@ -90,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
+    <!-- Header Atas -->
     <header class="topbar">
         <div class="brand">
             <a href="index.php" class="logo">Sela.</a>
@@ -99,19 +103,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </header>
 
     <main class="register-container">
+        
+        <!-- Sisi Kiri: Kutipan cerita inspiratif -->
         <section class="story-panel">
             <div class="story-top">
                 <div class="eyebrow"><span class="eyebrow-line"></span>RUANG UNTUK CERITA</div>
                 <h1>Hal sederhana<br>pun layak<br>diceritakan.</h1>
-                <p class="story-description">Tentang pagi yang tenang, perjalanan pulang, atau hal kecil yang membuatmu tersenyum.</p>
+                <p class="story-description">Kadang cuma butuh satu pesan anonim buat bikin suasana kelas jadi lebih cair dan seru.</p>
             </div>
             <div class="story-bottom">
                 <span class="quote-label">SEPOTONG CERITA DI SELA</span>
-                <blockquote>“Ternyata, duduk sebentar tanpa terburu-buru juga bagian dari menjalani hari.”</blockquote>
-                <p class="quote-author">Nadia Putri &middot; Catatan sore</p>
+                <blockquote>"UTS kok ngasih projek + ujian tertulis juga 🤭"</blockquote>
+                <p class="quote-author">Zaki soleh &middot; Curhat</p>
             </div>
         </section>
 
+        <!-- Sisi Kanan: Area Form Pendaftaran -->
         <section class="form-panel">
             <div class="form-heading">
                 <span class="form-eyebrow">BERKENALAN DULU, YUK</span>
@@ -119,31 +126,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p>Buat akun untuk masuk dan menemukan cerita-cerita kecil di sekitar kita.</p>
             </div>
 
+            <!-- Pesan error umum kalau gagal nyimpan database -->
             <?php if (isset($errors['umum'])): ?>
                 <div class="error-message"><?= htmlspecialchars($errors['umum'], ENT_QUOTES, 'UTF-8') ?></div>
             <?php endif; ?>
 
             <form action="register.php" method="POST" class="register-form" novalidate>
+                
+                <!-- Input Nama -->
                 <div class="form-group">
                     <label for="fullname">Nama</label>
                     <input type="text" id="fullname" name="fullname" placeholder="Nama yang ingin kamu gunakan"
                         value="<?= htmlspecialchars($_POST['fullname'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                         class="<?= isset($errors['fullname']) ? 'is-error' : '' ?>" required>
+                    
                     <?php if (isset($errors['fullname'])): ?>
                         <span class="field-error"><?= htmlspecialchars($errors['fullname'], ENT_QUOTES, 'UTF-8') ?></span>
                     <?php endif; ?>
                 </div>
 
+                <!-- Input Email -->
                 <div class="form-group">
                     <label for="mail">Email</label>
                     <input type="email" id="mail" name="mail" placeholder="nama@contoh.com"
                         value="<?= htmlspecialchars($_POST['mail'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                         class="<?= isset($errors['mail']) ? 'is-error' : '' ?>" required>
+                    
                     <?php if (isset($errors['mail'])): ?>
                         <span class="field-error"><?= htmlspecialchars($errors['mail'], ENT_QUOTES, 'UTF-8') ?></span>
                     <?php endif; ?>
                 </div>
 
+                <!-- Input Password (Dengan fitur lihat sandi) -->
                 <div class="form-group">
                     <label for="pswd">Kata sandi</label>
                     <div class="pw-wrap">
@@ -164,9 +178,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </label>
                         <?php endif; ?>
                     </div>
+                    
                     <?php if (isset($errors['pswd'])): ?>
                         <span class="field-error"><?= htmlspecialchars($errors['pswd'], ENT_QUOTES, 'UTF-8') ?></span>
                     <?php endif; ?>
+                    
                     <small>Gunakan minimal 8 karakter, gabungkan huruf besar, huruf kecil, angka, dan simbol.</small>
                 </div>
 
@@ -177,9 +193,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </section>
     </main>
 
-    <footer class="footer">
-        <span>&copy; 2026 Sela. Ruang berbagi cerita singkat.</span>
-        <span class="footer-quote">Ada cerita di antara jeda.</span>
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <span>&copy; 2026 Sela. Ruang cerita kelas.</span>
+            <span class="footer-quote">Saling sapa di sela waktu kuliah.</span>
+        </div>
     </footer>
 </body>
 </html>

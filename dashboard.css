@@ -528,3 +528,67 @@ body {
 .form-group input.is-error {
     border-color: #c0392b;
 }
+
+/* Footer */
+.site-footer {
+    border-top: 1px solid #e4e3dc;
+    padding: 22px 48px;
+    margin-top: auto;
+}
+
+.footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #6c736e;
+}
+
+.footer-quote {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 13px;
+}
+
+/* Notif "Berhasil login" */
+.toast-success {
+    position: fixed;
+    top: 88px;
+    left: 50%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px 10px 12px;
+    background-color: #1c6943;
+    color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(28, 105, 67, 0.25);
+    white-space: nowrap;
+    pointer-events: none;
+    animation: toastMuncul 3.5s ease forwards;
+}
+
+.toast-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+@keyframes toastMuncul {
+    0%   { opacity: 0; transform: translate(-50%, -8px); }
+    10%  { opacity: 1; transform: translate(-50%, 0); }
+    80%  { opacity: 1; transform: translate(-50%, 0); }
+    100% { opacity: 0; transform: translate(-50%, -8px); }
+}
