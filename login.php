@@ -11,6 +11,7 @@ if (isset($_SESSION['nama_user']) || isset($_COOKIE['user_ingat'])) {
 
 $pesan = $_GET['pesan'] ?? '';
 $errors = [];
+$loginBerhasil = false;
 
 // Firefox belum mendukung -webkit-text-security, jadi di sana dipakai input password biasa
 $pakaiSamarkan = stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Firefox') === false;
@@ -57,14 +58,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $_SESSION['nama_user'] = $nama_asli;
             $_SESSION['email_user'] = $email;
+            $_SESSION['notif_login'] = true;
 
             if ($rememberMe === '1') {
                 setcookie("user_ingat", $nama_asli, time() + (86400 * 30), "/");
                 setcookie("email_ingat", $email, time() + (86400 * 30), "/");
             }
 
-            header("Location: dashboard.php");
-            exit();
+            $loginBerhasil = true;
         } else {
             header("Location: login.php?pesan=gagal");
             exit();
@@ -78,6 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk ke Sela.</title>
+    <?php if ($loginBerhasil): ?>
+    <meta http-equiv="refresh" content="2;url=dashboard.php">
+    <?php endif; ?>
     <link rel="stylesheet" href="login.css">
     <link rel="icon" type="image/x-icon" href="icon_SELA.ico">
 </head>
@@ -114,7 +118,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h2 class="form-title">Masuk ke Sela.</h2>
             <p class="form-subtitle">Gunakan email dan kata sandimu.<br>Cerita-cerita kecil menanti di dalam.</p>
 
-            <?php if ($pesan === 'registrasi_sukses'): ?>
+            <?php if ($loginBerhasil): ?>
+                <div class="alert-box alert-success">Berhasil login! Mengalihkan ke ruang ceritamu...</div>
+            <?php elseif ($pesan === 'registrasi_sukses'): ?>
                 <div class="alert-box alert-success">Registrasi Berhasil! Silahkan Login.</div>
             <?php elseif ($pesan === 'gagal'): ?>
                 <div class="alert-box alert-error">Login Gagal! Email atau Password salah.</div>

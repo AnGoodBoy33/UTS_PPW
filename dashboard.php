@@ -358,8 +358,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Sela.</title>
     <link rel="stylesheet" href="dashboard.css">
     <link rel="icon" type="image/x-icon" href="icon_SELA.ico">
+    <style>
+        /* Notif "Berhasil login" (gaya ada di sini supaya tidak bergantung pada dashboard.css) */
+        .toast-success {
+            position: fixed;
+            top: 88px;
+            left: 50%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 18px 10px 12px;
+            background-color: #1c6943;
+            color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(28, 105, 67, 0.25);
+            white-space: nowrap;
+            pointer-events: none;
+            animation: toastMuncul 3.5s ease forwards;
+        }
+
+        .toast-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        @keyframes toastMuncul {
+            0%   { opacity: 0; transform: translate(-50%, -8px); }
+            10%  { opacity: 1; transform: translate(-50%, 0); }
+            80%  { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -8px); }
+        }
+    </style>
 </head>
 <body>
+
+    <?php if (!empty($_SESSION['notif_login'])): unset($_SESSION['notif_login']); ?>
+    <div class="toast-success" role="status">
+        <span class="toast-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        Berhasil login
+    </div>
+    <?php endif; ?>
 
     <!-- NAVBAR -->
     <nav class="navbar">
