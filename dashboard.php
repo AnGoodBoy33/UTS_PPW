@@ -2,7 +2,7 @@
 session_start();
 date_default_timezone_set('Asia/Jakarta');
 
-// 1. Proteksi Halaman
+// Proteksi Halaman (Pastikan user udah login & cek status admin)
 if (!isset($_SESSION['nama_user'])) {
     header("Location: login.php");
     exit;
@@ -10,16 +10,10 @@ if (!isset($_SESSION['nama_user'])) {
 
 $current_user = $_SESSION['nama_user'];
 $user_inisial = strtoupper(substr($current_user, 0, 1));
-
-// PENGECEKAN ADMIN
 $is_admin = ($current_user === 'Nabil Ramadhan Pradhita' || $current_user === 'Nabil Ramadhan' || strtolower($current_user) === 'admin');
 
-// 2. Hubungkan ke Database File
 include 'database.php';
 
-// ==========================================
-// --- DISISIPKAN: DEKRIPSI DATA MEMORY ---
-// ==========================================
 $kunci_sistem = "SelaRuangCeritaBersama2026!#$";
 $metode_aes   = "AES-256-CBC";
 $iv_aes       = substr(hash('sha256', $kunci_sistem), 0, 16);
@@ -44,18 +38,6 @@ if (isset($menfess_data) && is_array($menfess_data)) {
         }
     }
 }
-// ==========================================
-
-if (!isset($menfess_data)) $menfess_data = [];
-if (!isset($reports_data)) $reports_data = [];
-if (!isset($poll_data)) {
-    $poll_data = [
-        0 => ['id' => 1, 'opsi' => 'OOP (C++)', 'jumlah_vote' => 0],
-        1 => ['id' => 2, 'opsi' => 'Database', 'jumlah_vote' => 0],
-        2 => ['id' => 3, 'opsi' => 'Pemrograman Web', 'jumlah_vote' => 0],
-        3 => ['id' => 4, 'opsi' => 'Lainnya', 'jumlah_vote' => 0],
-    ];
-}
 
 function time_ago($timestamp) {
     $selisih = max(0, time() - (int)$timestamp);
@@ -73,7 +55,7 @@ $kata_kunci = trim($_GET['q'] ?? '');
 $edit_post_id = $_GET['edit_post'] ?? '';
 $edit_kom_id = $_GET['edit_kom'] ?? '';
 $show_reply = $_GET['reply_to'] ?? '';
-$total_votes = array_sum(array_map('intval', array_column($poll_data, 'jumlah_vote')));
+
 $filtered_menfess = array_filter($menfess_data, function ($post) use ($kategori_aktif, $kata_kunci) {
     $sesuai_kategori = $kategori_aktif === 'Semua' || ($post['kategori'] ?? '') === $kategori_aktif;
     $teks_pencarian = ($post['pesan'] ?? '') . ' ' . ($post['kategori'] ?? '') . ' ' . ($post['nama'] ?? 'Anonim');
@@ -84,17 +66,46 @@ $filtered_menfess = array_filter($menfess_data, function ($post) use ($kategori_
 
 $data_berubah = false;
 
-// 3. SENTRALISASI LOGIKA POST
+// Perhitungan persentase tiap kategori buat widget statistik
+$total_menfess = count($menfess_data);
+$kategori_counts = [
+    'Curhat' => 0,
+    'InfoKelas' => 0,
+    'Teman Belajar' => 0,
+    'Apresiasi' => 0
+];
+
+foreach ($menfess_data as $post) {
+    $kat = $post['kategori'] ?? '';
+    if (isset($kategori_counts[$kat])) {
+        $kategori_counts[$kat]++;
+    }
+}
+
+$kategori_persen = [];
+foreach ($kategori_counts as $kat => $count) {
+    $kategori_persen[$kat] = ($total_menfess > 0) ? round(($count / $total_menfess) * 100) : 0;
+}
+arsort($kategori_persen);
+
+// Sentralisasi Logika Post (Proses semua form dari user)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
-    // --- A. Kirim Menfess ---
+    // Kirim Menfess 
     if ($action === 'kirim_menfess') {
         $pesan = trim($_POST['pesan'] ?? '');
         $kategori = $_POST['kategori'] ?? 'Semua';
         $is_anonim = isset($_POST['anonim']) ? 1 : 0;
+        $error_menfess = '';
+        
+        if (empty($pesan)) {
+            $error_menfess = 'Pesan tidak boleh kosong!';
+        } elseif (!in_array($kategori, ['Curhat', 'InfoKelas', 'Teman Belajar', 'Apresiasi'], true)) {
+            $error_menfess = 'Silakan pilih kategori terlebih dahulu!';
+        }
 
-        if (!empty($pesan) && $kategori !== 'Semua') {
+        if ($error_menfess === '' && !empty($pesan) && $kategori !== 'Semua') {
             $post_baru = [
                 'id' => uniqid('post_'),
                 'pesan' => htmlspecialchars($pesan),
@@ -115,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // --- B. Edit Menfess Utama ---
+    // Edit Menfess Utama 
     elseif ($action === 'simpan_edit_post') {
         $post_id = $_POST['post_id'] ?? '';
         $pesan_baru = trim($_POST['pesan_edit'] ?? '');
@@ -134,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // --- C. Hapus Menfess Utama ---
+    // Hapus Menfess Utama 
     elseif ($action === 'hapus_post') {
         $post_id = $_POST['post_id'] ?? '';
         foreach ($menfess_data as $key => $post) {
@@ -150,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // --- D. Laporkan Menfess Utama ---
+    // Laporkan Menfess Utama 
     elseif ($action === 'laporkan_post') {
         $post_id = $_POST['post_id'] ?? '';
         $reports_data[] = [
@@ -162,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data_berubah = true;
     }
 
-    // --- E. Like / Unlike ---
+    // Like / Unlike 
     elseif ($action === 'like_post') {
         $post_id = $_POST['post_id'] ?? '';
         foreach ($menfess_data as $key => $post) {
@@ -184,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // --- F. Kirim Komentar ---
+    // Kirim Komentar 
     elseif ($action === 'kirim_komentar') {
         $post_id = $_POST['post_id'] ?? '';
         $pesan_komentar = trim($_POST['pesan_komentar'] ?? '');
@@ -206,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // --- G. Edit Komentar ---
+    // Edit Komentar 
     elseif ($action === 'simpan_edit_komentar') {
         $post_id = $_POST['post_id'] ?? '';
         $kom_id = $_POST['kom_id'] ?? '';
@@ -229,7 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // --- H. Hapus Komentar ---
+    // Hapus Komentar 
     elseif ($action === 'hapus_komentar') {
         $post_id = $_POST['post_id'] ?? '';
         $kom_id = $_POST['kom_id'] ?? '';
@@ -250,7 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // --- I. Laporkan Komentar ---
+    // Laporkan Komentar 
     elseif ($action === 'laporkan_komentar') {
         $post_id = $_POST['post_id'] ?? '';
         $kom_id = $_POST['kom_id'] ?? '';
@@ -265,25 +276,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data_berubah = true;
     }
     
-    // --- J. Polling ---
-    elseif ($action === 'vote_poll') {
-        $poll_id = (int)($_POST['poll_id'] ?? 0);
-        foreach ($poll_data as $key => $poll) {
-            if ($poll['id'] === $poll_id) {
-                $poll_data[$key]['jumlah_vote']++;
-                $data_berubah = true;
-                break;
-            }
-        }
-    }
+    
 
-        // 4. SIMPAN PERMANEN
+    // Simpan Permanen (Enkripsi ulang kalau ada yang diubah sebelum ditulis ke file)
     if ($data_berubah) {
         if (!isset($account)) $account = []; 
 
-        // ==========================================
-        // --- DISISIPKAN: ENKRIPSI TOTAL SEBELUM TULIS FILE ---
-        // ==========================================
         $menfess_tulis = $menfess_data;
         if (is_array($menfess_tulis)) {
             foreach ($menfess_tulis as $m_key => $post) {
@@ -305,12 +303,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
-        // ==========================================
 
         $isi_file = "<?php\n\n\$account = " . var_export($account, true) . ";\n\n";
         $isi_file .= "\$menfess_data = " . var_export($menfess_tulis, true) . ";\n\n";
         $isi_file .= "\$reports_data = " . var_export($reports_data, true) . ";\n\n";
-        $isi_file .= "\$poll_data = " . var_export($poll_data, true) . ";\n";
         file_put_contents('database.php', $isi_file);
         
         $curr_kategori = isset($_GET['kategori']) ? "?kategori=" . urlencode($_GET['kategori']) : "";
@@ -320,7 +316,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -328,8 +323,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sela.</title>
     <link rel="stylesheet" href="dashboard.css">
+    <link rel="icon" type="image/x-icon" href="icon_SELA.ico">
 </head>
 <body>
+
+    <!-- Munculin notifikasi sukses login sekali, lalu hapus dari session -->
+    <?php if (!empty($_SESSION['notif_login'])): unset($_SESSION['notif_login']); ?>
+    <div class="toast-success" role="status">
+        <span class="toast-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        Berhasil login
+    </div>
+    <?php endif; ?>
 
     <!-- NAVBAR -->
     <nav class="navbar">
@@ -339,23 +343,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
                 Beranda
             </a>
-            <a href="#" class="nav-link">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                InfoKelas
-            </a>
         </div>
         <div class="nav-center">
-            <form action="dashboard.php" method="GET" class="search-box">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" name="q" class="search-bar" placeholder="Cari menfess, topik, atau kata kunci...">
-            </form>
+            <div class="quote-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2" style="flex-shrink: 0;">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <div class="quote-slider-viewport">
+                    <div class="quote-slider-track">
+                        <div class="quote-slide"><span>Tetap positif, bareng Sela!</span></div>
+                        <div class="quote-slide"><span>Kampus tempat belajar & bertumbuh.</span></div>
+                        <div class="quote-slide"><span>Jangan lupa istirahat hari ini.</span></div>
+                        <div class="quote-slide"><span>Tetap positif, bareng Sela!</span></div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="nav-right">
-            <div class="user-profile-nav">
-                <div class="avatar-small"><?= $user_inisial ?></div>
-                <span><?= explode(' ', htmlspecialchars($current_user))[0] ?></span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </div>
+            <a href="logout.php" class="dropdown-item text-danger">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                Logout
+            </a>
         </div>
     </nav>
 
@@ -377,6 +385,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </a>
             
             <ul class="sidebar-menu">
+                <h4 class="sidebar-title">Cari Kategori</h4>
                 <li><a href="dashboard.php?kategori=Semua" class="<?= $kategori_aktif === 'Semua' ? 'active' : '' ?>">Semua</a></li>
                 <li><a href="dashboard.php?kategori=Curhat" class="<?= $kategori_aktif === 'Curhat' ? 'active' : '' ?>">Curhat</a></li>
                 <li><a href="dashboard.php?kategori=InfoKelas" class="<?= $kategori_aktif === 'InfoKelas' ? 'active' : '' ?>">InfoKelas</a></li>
@@ -389,16 +398,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <main class="feed-content">
             
             <!-- FORM KIRIM MENFESS -->
-            <form id="form-menfess" method="POST" action="dashboard.php" class="card create-post">
+            <form id="form-menfess" method="POST" action="dashboard.php" class="card create-post" novalidate>
                 <input type="hidden" name="action" value="kirim_menfess">
                 <div class="post-input-wrapper">
                     <div class="avatar-small"><?= $user_inisial ?></div>
-                    <input type="text" name="pesan" placeholder="Tulis menfess, pertanyaan, atau informasi..." class="post-input" required autocomplete="off">
+                    <input type="text" name="pesan" placeholder="Tulis menfess, pertanyaan, atau informasi..." class="post-input" required autocomplete="off"
+                        value="<?= htmlspecialchars($_POST['pesan'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                 </div>
+
+                <?php if (!empty($error_menfess)): ?>
+                    <span class="field-error"><?= htmlspecialchars($error_menfess, ENT_QUOTES, 'UTF-8') ?></span>
+                <?php endif; ?>
+
                 <div class="post-actions">
                     <div class="post-actions-left">
                         <select name="kategori" class="kategori-select" required>
-                            <option value="" disabled selected>Kategori: Semua ▾</option>
+                            <option value="" disabled selected>Kategori</option>
                             <option value="Curhat">Curhat</option>
                             <option value="InfoKelas">InfoKelas</option>
                             <option value="Teman Belajar">Teman Belajar</option>
@@ -415,7 +430,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php foreach ($filtered_menfess as $row): ?>
                     <?php 
                         $post_id = $row['id'] ?? '';
-                        $nama_asli = $row['nama'] ?? null; // Null jika diposting sebagai anonim
+                        $nama_asli = $row['nama'] ?? null; 
                         $is_post_owner = ($nama_asli !== null && $nama_asli === $current_user);
                         
                         $nama_tampil = $nama_asli ? htmlspecialchars($nama_asli) : 'Anonim';
@@ -607,40 +622,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
             
         </main>
-
-        <aside class="sidebar-right">
+        <div>
             <div class="card widget-card">
-                <div class="widget-header">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a4331" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                    <h4 class="widget-title">Pulse Kelas</h4>
+                <div class="widget-header" style="margin-bottom: 20px;">
+                    <h4 class="widget-title">Kategori Populer</h4>
                 </div>
-                <p class="widget-subtitle">Materi apa yang paling kamu butuhkan untuk dibahas sebelum UTS?</p>
-                <?php foreach ($poll_data as $poll): ?>
-                    <?php $persen = ($total_votes > 0) ? round(($poll['jumlah_vote'] / $total_votes) * 100) : 0; ?>
-                    <form method="POST" action="dashboard.php<?= isset($_GET['kategori']) ? '?kategori='.urlencode($_GET['kategori']) : '' ?>" class="poll-form">
-                        <input type="hidden" name="action" value="vote_poll">
-                        <input type="hidden" name="poll_id" value="<?= $poll['id'] ?>">
-                        <button type="submit" class="poll-button">
-                            <div class="poll-label"><span><?= htmlspecialchars($poll['opsi']) ?></span><span><?= $persen ?>%</span></div>
-                            <div class="progress-bar"><div class="progress" style="width: <?= $persen ?>%;"></div></div>
-                        </button>
-                    </form>
-                <?php endforeach; ?>
-            </div>
-            
-            <div class="card widget-card">
-                <div class="widget-header">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a4331" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    <h4 class="widget-title">InfoKelas</h4>
-                </div>
-                <ul class="info-list">
-                    <li><strong>Deadline tugas PPW</strong><span>24 Oktober 2026 • 23:59</span></li>
-                    <li><strong>Jadwal UTS (sementara)</strong><span>28 Oktober 2026</span></li>
+                <ul class="populer-list">
+                    <?php foreach ($kategori_persen as $nama_kategori => $persen): ?>
+                        <?php 
+                            if ($nama_kategori == 'Curhat') { 
+                                $icon_color = '#009688'; $bg_color = '#e0f2f1'; 
+                            } elseif ($nama_kategori == 'InfoKelas') { 
+                                $icon_color = '#ff9800'; $bg_color = '#fff3e0'; 
+                            } elseif ($nama_kategori == 'Teman Belajar') { 
+                                $icon_color = '#2196f3'; $bg_color = '#e3f2fd'; 
+                            } else { 
+                                $icon_color = '#e91e63'; $bg_color = '#fce4ec'; 
+                            }
+                        ?>
+                        <li class="populer-item">
+                            <div class="populer-kiri">
+                                <div class="populer-icon" style="background-color: <?= $bg_color ?>; color: <?= $icon_color ?>;">
+                                    <?php if ($nama_kategori == 'Curhat'): ?>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                                    <?php elseif ($nama_kategori == 'InfoKelas'): ?>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    <?php elseif ($nama_kategori == 'Teman Belajar'): ?>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    <?php else: ?>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    <?php endif; ?>
+                                </div>
+                                <span class="populer-nama"><?= htmlspecialchars($nama_kategori) ?></span>
+                            </div>
+                            <span class="populer-persen"><?= $persen ?>%</span>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
-            
-            <div class="logout-container"><a href="logout.php" class="logout-link">Keluar</a></div>
+        </div>
         </aside>
     </div>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <span>&copy; 2026 Sela. Ruang cerita  kelas.</span>
+            <span class="footer-quote">Saling sapa di sela waktu kuliah.</span>
+        </div>
+    </footer>
 </body>
 </html>

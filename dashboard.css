@@ -26,8 +26,20 @@ body {
     z-index: 100;
 }
 
-.nav-left { display: flex; align-items: center; gap: 32px; }
-.logo { color: #1b4332; font-family: Georgia, serif; font-weight: 700; font-size: 26px; text-decoration: none; margin-right: 10px; }
+.nav-left { 
+    display: flex; 
+    align-items: center; 
+    gap: 32px; 
+}
+
+.logo { 
+    color: #1b4332; 
+    font-family: Georgia, serif; 
+    font-weight: 700; 
+    font-size: 26px; 
+    text-decoration: none; 
+    margin-right: 10px; 
+}
 
 .nav-link { 
     text-decoration: none; 
@@ -173,12 +185,27 @@ body {
 .sidebar-left {
     position: sticky;
     top: 90px;
-    align-self: start; /* Kunci agar sticky bekerja di dalam grid */
+    align-self: start; 
 }
 
-.profile-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-.profile-info h4 { margin-bottom: 2px; color: #1b4332; font-size: 15px; font-weight: 600; }
-.profile-info p { font-size: 11.5px; color: #73827a; }
+.profile-header { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    margin-bottom: 24px; 
+}
+
+.profile-info h4 { 
+    margin-bottom: 2px; 
+    color: #1b4332; 
+    font-size: 15px; 
+    font-weight: 600; 
+}
+
+.profile-info p { 
+    font-size: 11.5px; 
+    color: #73827a; 
+}
 
 .sidebar-menu { list-style: none; }
 .sidebar-menu li { margin-bottom: 4px; }
@@ -202,99 +229,321 @@ body {
     padding: 22px; 
     scroll-margin-top: 90px;
 }
+
 #form-menfess:target {
     border-color: #1b4332;
     box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.12);
 }
 
-.post-input-wrapper { display: flex; gap: 14px; align-items: center; border-bottom: 1px solid #f0f4f2; padding-bottom: 18px; margin-bottom: 16px; }
-.post-input { width: 100%; border: none; outline: none; font-size: 14px; color: #2b3631; }
+.post-input-wrapper { 
+    display: flex; 
+    gap: 14px; 
+    align-items: center; 
+    border-bottom: 1px solid #f0f4f2; 
+    padding-bottom: 18px; 
+    margin-bottom: 16px; 
+}
+
+.post-input { 
+    width: 100%; 
+    border: none; 
+    outline: none; 
+    font-size: 14px; 
+    color: #2b3631; 
+}
+
 .post-input::placeholder { color: #8fa096; }
 
-.post-actions { display: flex; justify-content: space-between; align-items: center; }
-.post-actions-left { display: flex; align-items: center; gap: 20px; }
+.post-actions { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+.post-actions-left { 
+    display: flex; 
+    align-items: center; 
+    gap: 20px; 
+}
 
-.kategori-select { border: none; color: #52635a; font-size: 13px; font-weight: 500; outline: none; cursor: pointer; background: transparent; padding: 4px 0; transition: color 0.2s ease; }
+.kategori-select { 
+    border: none; 
+    color: #52635a; 
+    font-size: 13px; 
+    font-weight: 500; 
+    outline: none; 
+    cursor: pointer; 
+    background: transparent; 
+    padding: 4px 0; 
+    transition: color 0.2s ease; 
+}
+
 .kategori-select:hover { color: #1b4332; }
 
-.checkbox-label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: #52635a; font-size: 13px; font-weight: 500; }
+.checkbox-label { 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+    cursor: pointer; 
+    color: #52635a; 
+    font-size: 13px; 
+    font-weight: 500; 
+}
+
 .btn-kirim { padding: 8px 24px; font-size: 13px; }
 
 /* POST CARD FEED */
-.post-card { padding: 22px; scroll-margin-top: 90px; }
-.post-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-.post-user-info { display: flex; gap: 12px; align-items: center; }
-.post-meta-container { display: flex; flex-direction: column; gap: 2px; }
+.post-card { 
+    padding: 22px; 
+    scroll-margin-top: 90px; 
+}
+.post-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    margin-bottom: 14px; 
+}
+.post-user-info { 
+    display: flex; 
+    gap: 12px; 
+    align-items: center; 
+}
+.post-meta-container { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 2px; 
+}
 
-.post-category { font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
-.cat-dot { width: 6px; height: 6px; border-radius: 50%; }
-.cat-infokelas { color: #1565c0; } .cat-infokelas .cat-dot { background-color: #1565c0; }
-.cat-curhat { color: #c62828; } .cat-curhat .cat-dot { background-color: #c62828; }
-.cat-teman { color: #2e7d32; } .cat-teman .cat-dot { background-color: #2e7d32; }
-.cat-apresiasi { color: #d81b60; } .cat-apresiasi .cat-dot { background-color: #d81b60; }
+.post-category { 
+    font-size: 12px; 
+    font-weight: 600; 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 6px; 
+}
 
-.post-author-time { font-size: 12px; color: #73827a; font-weight: 500; }
+.cat-dot { 
+    width: 6px; 
+    height: 6px; 
+    border-radius: 50%; 
+}
+.cat-infokelas { color: #1565c0; } 
+.cat-infokelas .cat-dot { background-color: #1565c0; }
+.cat-curhat { color: #c62828; } 
+.cat-curhat .cat-dot { background-color: #c62828; }
+.cat-teman { color: #2e7d32; } 
+.cat-teman .cat-dot { background-color: #2e7d32; }
+.cat-apresiasi { color: #d81b60; } 
+.cat-apresiasi .cat-dot { background-color: #d81b60; }
 
-.btn-more { background: none; border: none; color: #a3b2a9; cursor: pointer; font-size: 12px; padding: 4px; border-radius: 4px; transition: color 0.2s ease; }
+.post-author-time { 
+    font-size: 12px; 
+    color: #73827a; 
+    font-weight: 500; 
+}
+
+.btn-more { 
+    background: none; 
+    border: none; 
+    color: #a3b2a9; 
+    cursor: pointer; 
+    font-size: 12px; 
+    padding: 4px; 
+    border-radius: 4px; 
+    transition: color 0.2s ease; 
+}
 .btn-more:hover { color: #2b3631; }
 
-.post-text { font-size: 14.5px; line-height: 1.6; color: #2b3631; margin-bottom: 18px; }
+.post-text { 
+    font-size: 14.5px; 
+    line-height: 1.6; 
+    color: #2b3631; 
+    margin-bottom: 18px; 
+}
 
-.post-footer { display: flex; align-items: center; gap: 20px; font-size: 13px; color: #62726a; border-top: 1px solid #f4f7f5; padding-top: 14px; }
+.post-footer { 
+    display: flex; 
+    align-items: center;
+    gap: 20px; 
+    font-size: 13px; 
+    color: #62726a; 
+    border-top: 1px solid #f4f7f5; 
+    padding-top: 14px; 
+}
 .form-action-inline { display: inline-block; }
 
 .action-btn { 
-    background: none; border: none; color: #62726a; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: none; padding: 4px 8px; border-radius: 6px; transition: all 0.2s ease; 
+    background: none; 
+    border: none; 
+    color: #62726a; 
+    font-size: 13px; 
+    font-weight: 500; 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 6px; 
+    cursor: pointer; 
+    text-decoration: none; 
+    padding: 4px 8px; 
+    border-radius: 6px; 
+    transition: all 0.2s ease; 
 }
 .action-btn:hover { color: #1b4332; background-color: #f2f5f3; }
 .action-tanggapi { margin-left: auto; }
 
 /* KOMENTAR */
-.comments-list { margin-top: 12px; padding-top: 12px; border-top: 1px dashed #e6ebe8; display: flex; flex-direction: column; gap: 6px; }
-.comment-item { font-size: 12.5px; background-color: #f7f9f8; padding: 8px 12px; border-radius: 8px; color: #2b3631; }
-.comment-time { font-size: 10.5px; color: #8fa096; margin-left: 8px; }
+.comments-list { 
+    margin-top: 12px; 
+    padding-top: 12px; 
+    border-top: 1px dashed #e6ebe8; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 6px; 
+}
+.comment-item { 
+    font-size: 12.5px; 
+    background-color: #f7f9f8; 
+    padding: 8px 12px; 
+    border-radius: 8px; 
+    color: #2b3631; 
+}
+.comment-time { 
+    font-size: 10.5px; 
+    color: #8fa096; 
+    margin-left: 8px; 
+}
 
-.reply-form { margin-top: 12px; display: flex; gap: 8px; }
-.reply-input { flex: 1; padding: 8px 14px; border: 1px solid #d8e2dc; border-radius: 16px; font-size: 12.5px; outline: none; transition: border-color 0.2s ease; }
+.reply-form { 
+    margin-top: 12px; 
+    display: flex; 
+    gap: 8px; 
+}
+.reply-input { 
+    flex: 1; 
+    padding: 8px 14px; 
+    border: 1px solid #d8e2dc; 
+    border-radius: 16px; 
+    font-size: 12.5px; 
+    outline: none; 
+    transition: border-color 0.2s ease; 
+}
 .reply-input:focus { border-color: #1b4332; }
-.btn-reply-send { padding: 6px 16px; font-size: 12px; border-radius: 16px; }
+.btn-reply-send { 
+    padding: 6px 16px; 
+    font-size: 12px; 
+    border-radius: 16px; 
+}
 
-.empty-card { text-align: center; color: #73827a; padding: 36px 20px; font-size: 14px; }
+.empty-card { 
+    text-align: center; 
+    color: #73827a; 
+    padding: 36px 20px; 
+    font-size: 14px; 
+}
 
 /* SIDEBAR KANAN (STICKY) */
 .sidebar-right {
     position: sticky;
     top: 90px;
-    align-self: start; /* Kunci agar sticky bekerja di dalam grid */
+    align-self: start; 
+}
+.widget-card { 
+    background-color: #e8eee9; 
+    border: none; 
+    border-radius: 14px; 
+    padding: 20px; 
+}
+.widget-header { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    margin-bottom: 6px; 
+}
+.widget-title { 
+    color: #1b4332; 
+    font-size: 14.5px; 
+    font-weight: 600; 
+}
+.widget-subtitle { 
+    font-size: 12px; 
+    color: #52635a; 
+    margin-bottom: 18px; 
+    line-height: 1.5; 
 }
 
-.widget-card { background-color: #e8eee9; border: none; border-radius: 14px; padding: 20px; }
-.widget-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-.widget-title { color: #1b4332; font-size: 14.5px; font-weight: 600; }
-.widget-subtitle { font-size: 12px; color: #52635a; margin-bottom: 18px; line-height: 1.5; }
-
 .poll-form { margin-bottom: 12px; }
-.poll-button { width: 100%; border: none; background: none; text-align: left; cursor: pointer; padding: 0; }
-.poll-label { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 12.5px; font-weight: 500; color: #2b3631; transition: color 0.2s ease; }
+.poll-button { 
+    width: 100%; 
+    border: none; 
+    background: none; 
+    text-align: left; 
+    cursor: pointer; 
+    padding: 0; 
+}
+.poll-label { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 6px; 
+    font-size: 12.5px; 
+    font-weight: 500; 
+    color: #2b3631;
+    transition: color 0.2s ease; 
+}
 .poll-button:hover .poll-label { color: #1b4332; }
 
-.progress-bar { width: 100%; background: #ffffff; border-radius: 6px; height: 7px; overflow: hidden; }
-.progress { background-color: #1b4332; height: 100%; border-radius: 6px; transition: width 0.3s ease; }
-.poll-total { font-size: 11px; color: #73827a; margin-top: 16px; padding-top: 12px; border-top: 1px solid #d4dfd7; }
+.progress-bar { 
+    width: 100%; 
+    background: #ffffff; 
+    border-radius: 6px; 
+    height: 7px; 
+    overflow: hidden; 
+}
+.progress { 
+    background-color: #1b4332; 
+    height: 100%; 
+    border-radius: 6px; 
+    transition: width 0.3s ease; 
+}
+.poll-total { 
+    font-size: 11px; 
+    color: #73827a; 
+    margin-top: 16px; 
+    padding-top: 12px; 
+    border-top: 1px solid #d4dfd7; 
+}
 
 .info-list { list-style: none; }
-.info-list li { margin-bottom: 14px; display: flex; flex-direction: column; gap: 2px; }
-.info-list li strong { color: #1b4332; font-size: 13px; font-weight: 600; }
-.info-list li span { color: #73827a; font-size: 11.5px; }
+.info-list li { 
+    margin-bottom: 14px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 2px; 
+}
+.info-list li strong { 
+    color: #1b4332; 
+    font-size: 13px; 
+    font-weight: 600; 
+}
+.info-list li span { 
+    color: #73827a; 
+    font-size: 11.5px; 
+}
 
-.logout-container { text-align: right; margin-top: 8px; }
-.logout-link { color: #73827a; text-decoration: none; font-size: 12.5px; font-weight: 500; transition: color 0.2s ease; }
+.logout-container { 
+    text-align: right; 
+    margin-top: 8px; 
+}
+.logout-link { 
+    color: #73827a; 
+    text-decoration: none; 
+    font-size: 12.5px; 
+    font-weight: 500; 
+    transition: color 0.2s ease; 
+}
 .logout-link:hover { color: #c62828; }
 
 /* EFEK WARNA HATI SAAT DI-LIKE */
 .action-btn.liked {
-    color: #e63946; /* Warna merah hati menyala */
-    background-color: #fdf0f1; /* Background kemerahan samar saat di-like */
+    color: #e63946; 
+    background-color: #fdf0f1; 
 }
 
 .action-btn.liked:hover {
@@ -303,12 +552,10 @@ body {
 }
 
 .action-btn.liked span {
-    font-weight: 600; /* Angka menjadi tebal agar jelas */
+    font-weight: 600; 
 }
 
-/* =========================================
-   STYLE UNTUK OPSI KOMENTAR (EDIT, HAPUS, LAPOR)
-   ========================================= */
+/*STYLE UNTUK OPSI KOMENTAR (EDIT, HAPUS, LAPOR)*/
 
 /* Wadah komentar */
 .comment-item {
@@ -336,13 +583,13 @@ body {
     border-radius: 8px;
 }
 
-/* Detail & Summary (Dropdown Murni HTML/CSS) */
+/* Detail & Summary */
 .comment-options {
     position: relative;
     display: inline-block;
 }
 
-/* Hilangkan icon panah default bawaan <details> */
+/* Hilangkan icon panah  */
 .comment-options summary::-webkit-details-marker { display: none; }
 .comment-options summary { list-style: none; }
 
@@ -400,3 +647,187 @@ body {
 .dropdown-item:hover { background-color: #f4f7f5; color: #1b4332; }
 .dropdown-item.text-danger:hover { color: #d32f2f; background-color: #fdf2f2; }
 .dropdown-item.text-warning:hover { color: #f57c00; background-color: #fff8e1; }
+
+/* KATEGORI POPULER */
+.populer-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.populer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.populer-kiri {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.populer-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.populer-nama {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #2b3631;
+}
+
+.populer-persen {
+    font-size: 13px;
+    font-weight: 600;
+    color: #62726a;
+}
+
+/* STYLE SLIDESHOW KATA INSPIRATIF NAVBAR */
+.quote-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #f4f7f5;
+    padding: 9px 18px;
+    border-radius: 6px;
+    width: 380px;
+    border: 1px solid #e5ebe7;
+    overflow: hidden; 
+}
+
+.quote-slider-viewport {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.quote-slider-track {
+    display: flex;
+    width: 400%; 
+    animation: textSlide 12s infinite; 
+}
+
+.quote-slide {
+    width: 25%; 
+    flex-shrink: 0;
+    font-size: 13px;
+    color: #1b4332;
+    font-weight: 600;
+    font-style: italic;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+@keyframes textSlide {
+    0%, 20%   { transform: translateX(0); }         
+    25%, 45%  { transform: translateX(-25%); }      
+    50%, 70%  { transform: translateX(-50%); }      
+    75%, 99.999999%  { transform: translateX(-75%); }      
+    100%      { transform: translateX(0); }         
+}
+
+/*  PESAN ERROR PER KOLOM  */
+.field-error {
+    position: relative;
+    display: block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border: 1px solid #ecc6c6;
+    border-radius: 8px;
+    background-color: #f9e6e6;
+    color: #8c2d2d;
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+/* Panah kecil di atas kotak */
+.field-error::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 18px;
+    width: 10px;
+    height: 10px;
+    background-color: #f9e6e6;
+    border-top: 1px solid #ecc6c6;
+    border-left: 1px solid #ecc6c6;
+    transform: rotate(45deg);
+}
+
+/* Border kolom error  */
+.form-group input.is-error {
+    border-color: #c0392b;
+}
+
+/* Footer */
+.site-footer {
+    border-top: 1px solid #e4e3dc;
+    padding: 22px 48px;
+    margin-top: auto;
+}
+
+.footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #6c736e;
+}
+
+.footer-quote {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 13px;
+}
+
+/* Notif "Berhasil login" */
+.toast-success {
+    position: fixed;
+    top: 88px;
+    left: 50%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px 10px 12px;
+    background-color: #1c6943;
+    color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(28, 105, 67, 0.25);
+    white-space: nowrap;
+    pointer-events: none;
+    animation: toastMuncul 3.5s ease forwards;
+}
+
+.toast-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+@keyframes toastMuncul {
+    0%   { opacity: 0; transform: translate(-50%, -8px); }
+    10%  { opacity: 1; transform: translate(-50%, 0); }
+    80%  { opacity: 1; transform: translate(-50%, 0); }
+    100% { opacity: 0; transform: translate(-50%, -8px); }
+}
