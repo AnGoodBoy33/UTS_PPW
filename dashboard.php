@@ -2,7 +2,7 @@
 session_start();
 date_default_timezone_set('Asia/Jakarta');
 
-// 1. Proteksi Halaman (Pastikan user udah login & cek status admin)
+// Proteksi Halaman (Pastikan user udah login & cek status admin)
 if (!isset($_SESSION['nama_user'])) {
     header("Location: login.php");
     exit;
@@ -12,7 +12,6 @@ $current_user = $_SESSION['nama_user'];
 $user_inisial = strtoupper(substr($current_user, 0, 1));
 $is_admin = ($current_user === 'Nabil Ramadhan Pradhita' || $current_user === 'Nabil Ramadhan' || strtolower($current_user) === 'admin');
 
-// 2. Hubungkan ke Database File & Siapkan Dekripsi Data Memory
 include 'database.php';
 
 $kunci_sistem = "SelaRuangCeritaBersama2026!#$";
@@ -40,7 +39,6 @@ if (isset($menfess_data) && is_array($menfess_data)) {
     }
 }
 
-// Fungsi ngubah format waktu jadi ala sosmed (misal: "5 menit lalu")
 function time_ago($timestamp) {
     $selisih = max(0, time() - (int)$timestamp);
 
@@ -52,19 +50,15 @@ function time_ago($timestamp) {
     return date('d M Y', (int)$timestamp);
 }
 
-// Filter postingan berdasarkan kategori & pencarian kata kunci
 $kategori_aktif = $_GET['kategori'] ?? 'Semua';
-$kata_kunci = trim($_GET['q'] ?? '');
 $edit_post_id = $_GET['edit_post'] ?? '';
 $edit_kom_id = $_GET['edit_kom'] ?? '';
 $show_reply = $_GET['reply_to'] ?? '';
 
-$filtered_menfess = array_filter($menfess_data, function ($post) use ($kategori_aktif, $kata_kunci) {
+$filtered_menfess = array_filter($menfess_data, function ($post) use ($kategori_aktif) {
     $sesuai_kategori = $kategori_aktif === 'Semua' || ($post['kategori'] ?? '') === $kategori_aktif;
-    $teks_pencarian = ($post['pesan'] ?? '') . ' ' . ($post['kategori'] ?? '') . ' ' . ($post['nama'] ?? 'Anonim');
-    $sesuai_pencarian = $kata_kunci === '' || stripos($teks_pencarian, $kata_kunci) !== false;
 
-    return $sesuai_kategori && $sesuai_pencarian;
+    return $sesuai_kategori;
 });
 
 $data_berubah = false;
@@ -91,11 +85,11 @@ foreach ($kategori_counts as $kat => $count) {
 }
 arsort($kategori_persen);
 
-// 3. Sentralisasi Logika Post (Proses semua form dari user)
+// Sentralisasi Logika Post (Proses semua form dari user)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
-    // --- A. Kirim Menfess ---
+    // Kirim Menfess 
     if ($action === 'kirim_menfess') {
         $pesan = trim($_POST['pesan'] ?? '');
         $kategori = $_POST['kategori'] ?? 'Semua';
@@ -129,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // --- B. Edit Menfess Utama ---
+    // Edit Menfess Utama 
     elseif ($action === 'simpan_edit_post') {
         $post_id = $_POST['post_id'] ?? '';
         $pesan_baru = trim($_POST['pesan_edit'] ?? '');
@@ -148,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // --- C. Hapus Menfess Utama ---
+    // Hapus Menfess Utama 
     elseif ($action === 'hapus_post') {
         $post_id = $_POST['post_id'] ?? '';
         foreach ($menfess_data as $key => $post) {
@@ -164,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // --- D. Laporkan Menfess Utama ---
+    // Laporkan Menfess Utama 
     elseif ($action === 'laporkan_post') {
         $post_id = $_POST['post_id'] ?? '';
         $reports_data[] = [
@@ -176,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data_berubah = true;
     }
 
-    // --- E. Like / Unlike ---
+    // Like / Unlike 
     elseif ($action === 'like_post') {
         $post_id = $_POST['post_id'] ?? '';
         foreach ($menfess_data as $key => $post) {
@@ -198,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // --- F. Kirim Komentar ---
+    // Kirim Komentar 
     elseif ($action === 'kirim_komentar') {
         $post_id = $_POST['post_id'] ?? '';
         $pesan_komentar = trim($_POST['pesan_komentar'] ?? '');
@@ -220,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // --- G. Edit Komentar ---
+    // Edit Komentar 
     elseif ($action === 'simpan_edit_komentar') {
         $post_id = $_POST['post_id'] ?? '';
         $kom_id = $_POST['kom_id'] ?? '';
@@ -243,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // --- H. Hapus Komentar ---
+    // Hapus Komentar 
     elseif ($action === 'hapus_komentar') {
         $post_id = $_POST['post_id'] ?? '';
         $kom_id = $_POST['kom_id'] ?? '';
@@ -264,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // --- I. Laporkan Komentar ---
+    // Laporkan Komentar 
     elseif ($action === 'laporkan_komentar') {
         $post_id = $_POST['post_id'] ?? '';
         $kom_id = $_POST['kom_id'] ?? '';
@@ -281,7 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     
 
-    // 4. Simpan Permanen (Enkripsi ulang kalau ada yang diubah sebelum ditulis ke file)
+    // Simpan Permanen (Enkripsi ulang kalau ada yang diubah sebelum ditulis ke file)
     if ($data_berubah) {
         if (!isset($account)) $account = []; 
 

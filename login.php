@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Cek status user: kalau udah ada sesi atau cookie, langsung lempar ke dashboard
 if (isset($_SESSION['nama_user']) || isset($_COOKIE['user_ingat'])) {
     if (!isset($_SESSION['nama_user']) && isset($_COOKIE['user_ingat'])) {
         $_SESSION['nama_user'] = $_COOKIE['user_ingat'];
@@ -10,15 +9,11 @@ if (isset($_SESSION['nama_user']) || isset($_COOKIE['user_ingat'])) {
     exit();
 }
 
-// Siapin variabel bawaan buat nampung error dan status
 $pesan = $_GET['pesan'] ?? '';
 $errors = [];
 $loginBerhasil = false;
 
-// Deteksi browser
-$pakaiSamarkan = stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Firefox') === false;
 
-// Mulai proses kalau user nekan tombol masuk
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['mail'] ?? '');
     $password = $_POST['pswd'] ?? '';
@@ -37,11 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['pswd'] = 'Password yang anda masukan salah';
     }
 
-    // Kalau semua input aman, lanjut cek ke database
     if (empty($errors)) {
         include 'database.php';
 
-        // Siapin kunci dan metode buat buka enkripsi datanya
         $kunci_sistem = "SelaRuangCeritaBersama2026!#$";
         $metode_aes   = "AES-256-CBC";
         $iv_aes       = substr(hash('sha256', $kunci_sistem), 0, 16);
@@ -54,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Cek kecocokan password
         if ($dataUser !== null && password_verify($password, $dataUser['password'])) {
 
-            // Terjemahin nama dari database ke teks biasa buat ditampilin
             $nama_asli = openssl_decrypt($dataUser['nama'], $metode_aes, $kunci_sistem, 0, $iv_aes);
             if ($nama_asli === false) {
                 $nama_asli = $dataUser['nama'];
@@ -154,22 +146,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label for="pswd">Kata sandi</label>
                     <div class="pw-wrap">
-                        <input type="<?= $pakaiSamarkan ? 'text' : 'password' ?>"
+                        <input type="text"
                             id="pswd" name="pswd"
                             class="pw-field<?= isset($errors['pswd']) ? ' is-error' : '' ?>"
                             placeholder="Masukkan kata sandi"
                             autocomplete="current-password" autocapitalize="off" spellcheck="false" required>
 
-                        <?php if ($pakaiSamarkan): ?>
-                            <input type="checkbox" id="show-pw" class="pw-toggle" aria-label="Tampilkan kata sandi">
-                            <label for="show-pw" class="pw-eye" title="Tampilkan kata sandi">
-                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                    <path d="M2 12C4.5 7.5 8 5 12 5s7.5 2.5 10 7c-2.5 4.5-6 7-10 7S4.5 16.5 2 12z"/>
-                                    <circle cx="12" cy="12" r="3"/>
-                                    <path class="pw-slash" d="M3 3l18 18"/>
-                                </svg>
-                            </label>
-                        <?php endif; ?>
+                        <input type="checkbox" id="show-pw" class="pw-toggle" aria-label="Tampilkan kata sandi">
+                        <label for="show-pw" class="pw-eye" title="Tampilkan kata sandi">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M2 12C4.5 7.5 8 5 12 5s7.5 2.5 10 7c-2.5 4.5-6 7-10 7S4.5 16.5 2 12z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                                <path class="pw-slash" d="M3 3l18 18"/>
+                            </svg>
+                        </label>
                     </div>
                     
                     <?php if (isset($errors['pswd'])): ?>

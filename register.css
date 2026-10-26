@@ -79,13 +79,81 @@ body {
 
 /*  PANEL KIRI  */
 .story-panel {
-    background-color: #eaede6;
-    border-radius: 12px;
-    padding: 52px 44px;
-    min-height: 610px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 590px;
+    padding: 40px 38px;
+    border: 1px solid rgba(255, 255, 255, .15);
+    border-radius: 24px;
+    background: #2b4135;
+    box-shadow: var(--shadow-soft);
+    color: #f8fbf8;
+}
+
+.story-panel::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: -56px;
+    right: -60px;
+    width: 300px;
+    height: 290px;
+    background: url("asset/community-orbit.svg") center / contain no-repeat;
+    opacity: .3;
+    pointer-events: none;
+}
+
+.story-panel::before {
+    transform-origin: 50% 50%;
+    animation: sela-orbit-rotate 42s linear infinite;
+}
+
+@keyframes sela-orbit-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.story-panel::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    right: 15px;
+    bottom: 28px;
+    width: 185px;
+    height: 140px;
+    background: url("asset/doodle-chat.svg") center / contain no-repeat;
+    opacity: .45;
+    transform: rotate(-5deg);
+    pointer-events: none;
+}
+
+.story-panel::after {
+    animation: sela-space-drift 17s ease-in-out infinite alternate;
+}
+
+@keyframes sela-space-drift {
+    0% {
+        translate: 0 0;
+    }
+    25% {
+        translate: 10px -8px;
+    }
+    55% {
+        translate: 24px 8px;
+    }
+    78% {
+        translate: 18px -7px;
+    }
+    100% {
+        translate: 34px 2px;
+    }
 }
 
 .eyebrow {
@@ -96,7 +164,7 @@ body {
     font-weight: 600;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #3b4d43;
+    color: #f8fbf8;
     margin-bottom: 24px;
 }
 
@@ -104,7 +172,7 @@ body {
     display: inline-block;
     width: 20px;
     height: 1px;
-    background-color: #5a6b60;
+    background-color: #f8fbf8;
 }
 
 .story-panel h1 {
@@ -112,19 +180,20 @@ body {
     font-size: 44px;
     font-weight: 400;
     line-height: 1.18;
-    color: #2b4135;
+    color: #f8fbf8;
     margin-bottom: 22px;
 }
 
 .story-description {
     font-size: 15px;
     line-height: 1.65;
-    color: #5d6660;
+    color: #f8fbf8;
     max-width: 360px;
+    margin-bottom: 200px;
 }
 
 .story-bottom {
-    border-top: 1px solid #d8ddd4;
+    border-top: 1px solid #f8fbf8;
     padding-top: 28px;
 }
 
@@ -134,7 +203,7 @@ body {
     font-weight: 600;
     letter-spacing: 0.9px;
     text-transform: uppercase;
-    color: #5d6660;
+    color: #f8fbf8;
     margin-bottom: 14px;
 }
 
@@ -142,20 +211,26 @@ body {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 21px;
     line-height: 1.5;
-    color: #2b4135;
+    color: #f8fbf8;
     margin-bottom: 16px;
 }
 
 .quote-author {
     font-size: 12px;
-    color: #6c736e;
+    color: #8c938e;
 }
 
 /*  PANEL KANAN (Area Form Pendaftaran)  */
 .form-panel {
-    max-width: 380px;
-    width: 100%;
-    margin: 0 auto;
+    max-width: 510px;
+    box-shadow: rgba(30, 73, 55, 0.055) 0px 14px 42px;
+    padding: 40px 38px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(229, 236, 231);
+    border-image: none;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.95);
 }
 
 .form-eyebrow {
@@ -218,9 +293,9 @@ body {
     font-size: 13.5px;
     font-family: inherit;
     color: #26312a;
-    background-color: #ffffff;
-    border: 1px solid #dfded6;
-    border-radius: 8px;
+    background-color: #fafcfb;
+    border: 1px solid #dce7df;
+    border-radius: 11px;
     outline: none;
     transition: border-color 0.2s;
 }

@@ -33,11 +33,17 @@ a {
 
 /*  NAVBAR  */
 .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 5%;
-    border-bottom: 1px solid #EAEAEA;
+    padding: 15px clamp(22px, 5vw, 76px);
+    background: rgba(255, 255, 255, .94);
+    border-bottom: 1px solid var(--line-soft);
+    box-shadow: 0 4px 36px rgba(25, 67, 52, 0.12);
+    backdrop-filter: blur(34px);
 }
 
 .nav-left { 
@@ -86,6 +92,7 @@ a {
     background-color: var(--primary-color); 
     color: #FFF; 
     border: none; 
+    border-radius: 16px;
 }
 
 .btn-primary:hover { 
@@ -96,6 +103,7 @@ a {
     background-color: transparent; 
     border: 1px solid var(--text-muted); 
     color: var(--text-dark); 
+    border-radius: 16px;
 }
 
 .btn-outline:hover { 
@@ -110,6 +118,79 @@ a {
     gap: 50px;
     align-items: center;
     min-height: 70vh;
+}
+.hero::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: min(44vw, 500px);
+    height: 390px;
+    background: url("asset/community-orbit.svg") center / contain no-repeat;
+    opacity: .48;
+    pointer-events: none;
+    top: 45px;
+    right: 435px;
+}
+
+.hero::before {
+    transform-origin: 50% 50%;
+    animation: sela-orbit-drift 24s ease-in-out infinite alternate;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    right: 47%;
+    bottom: 85px;
+    right: 55%;
+    width: 76px;
+    height: 76px;
+    background: url("asset/doodle-sparkle.svg") center / contain no-repeat;
+    opacity: 0.42;
+    pointer-events: none;
+}
+
+.hero::after {
+    animation: sela-sparkle-drift 15s ease-in-out infinite alternate;
+}
+
+
+@keyframes sela-orbit-drift {
+    0% {
+        transform: translate(0, 0) rotate(-2deg) scale(1);
+    }
+    22% {
+        transform: translate(12px, -14px) rotate(2deg) scale(1.03);
+    }
+    48% {
+        transform: translate(28px, 2px) rotate(-2deg) scale(1.05);
+    }
+    74% {
+        transform: translate(14px, 16px) rotate(2deg) scale(1.01);
+    }
+    100% {
+        transform: translate(-4px, 6px) rotate(0deg) scale(0.97);
+    }
+}
+
+@keyframes sela-sparkle-drift {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+        opacity: 0.45;
+    }
+    30% {
+        transform: translate(10px, -12px) rotate(6deg) scale(1.12);
+        opacity: 0.6;
+    }
+    62% {
+        transform: translate(22px, 4px) rotate(-4deg) scale(0.92);
+        opacity: 0.34;
+    }
+    100% {
+        transform: translate(34px, -8px) rotate(3deg) scale(1.06);
+        opacity: 0.5;
+    }
 }
 
 .hero-left, .hero-right { 
@@ -144,12 +225,51 @@ a {
 
 /*  KARTU SLIDESHOW DI KANAN  */
 .card-wrapper {
-    background-color: var(--bg-card);
-    padding: 40px;
-    border-radius: 8px;
-    text-align: center;
-    width: 100%;
-    max-width: 550px;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    max-width: 610px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    border: 1px solid rgba(220, 234, 225, .95);
+    border-radius: 25px;
+    background: rgba(255, 255, 255, .93);
+    box-shadow: var(--shadow-soft);
+    text-align: left;
+}
+
+.card-wrapper::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    right: -32px;
+    top: -34px;
+    width: 150px;
+    height: 130px;
+    background: url("asset/doodle-chat.svg") center / contain no-repeat;
+    opacity: .14;
+    transform: rotate(-8deg);
+    pointer-events: none;
+}
+
+.card-wrapper::after {
+    animation: sela-card-drift 19s ease-in-out infinite alternate;
+}
+
+@keyframes sela-card-drift {
+    0% {
+        transform: translate(0, 0) rotate(-8deg) scale(1);
+    }
+    35% {
+        transform: translate(-10px, -14px) rotate(-5deg) scale(1.03);
+    }
+    68% {
+        transform: translate(-18px, 6px) rotate(-10deg) scale(0.98);
+    }
+    100% {
+        transform: translate(-6px, -6px) rotate(-6deg) scale(1.02);
+    }
 }
 
 .story-card {
@@ -216,26 +336,115 @@ a {
     color: var(--text-muted); 
 }
 
-.card-caption { 
-    font-size: 13px; 
-    color: var(--text-muted); 
-    margin-top: 20px; 
-    font-family: var(--font-serif); 
+.card-caption {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 20px;
+    font-family: var(--font-serif);
 }
 
 /*  BAGIAN FITUR-FITUR DI BAWAH  */
-.features { 
-    background-color: #F6F6F2; 
-    padding: 60px 5%; 
-    border-top: 1px solid #EAEAEA; 
-    border-bottom: 1px solid #EAEAEA;
+.features {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 48px clamp(22px, 5vw, 68px) 54px;
+    background: #fff;
+    border: 1px solid #e7eee9;
+    border-top: 0;
+    border-radius: 0 0 28px 28px;
+    box-shadow: 0 12px 35px rgba(34, 69, 52, .035);
+    justify-content: space-between;
+    align-items: center;
+    
 }
 
-.features-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: flex-end; 
-    margin-bottom: 40px; 
+.features::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    top: -65px;
+    right: -42px;
+    width: 230px;
+    height: 205px;
+    background: url("asset/soft-shapes.svg") center / contain no-repeat;
+    opacity: .7;
+    pointer-events: none;
+}
+
+.features::before {
+    animation: sela-features-drift 22s ease-in-out infinite alternate;
+}
+
+@keyframes sela-features-drift {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    30% {
+        transform: translate(12px, 10px) rotate(3deg) scale(1.04);
+    }
+    60% {
+        transform: translate(22px, -4px) rotate(-2deg) scale(0.97);
+    }
+    100% {
+        transform: translate(8px, -12px) rotate(-3deg) scale(1.02);
+    }
+}
+
+.features::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    left: -35px;
+    bottom: -50px;
+    width: 150px;
+    height: 145px;
+    background: url("asset/doodle-connection.svg") center / contain no-repeat;
+    opacity: .18;
+    pointer-events: none;
+}
+
+.features::after {
+    animation: sela-connection-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes sela-connection-drift {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    40% {
+        transform: translate(10px, -14px) rotate(-3deg) scale(1.05);
+    }
+    74% {
+        transform: translate(20px, 4px) rotate(3deg) scale(0.96);
+    }
+    100% {
+        transform: translate(6px, -8px) rotate(0deg) scale(1.02);
+    }
+}
+
+.feature-item {
+    position: relative;
+    padding: 25px 24px;
+    border: 1px solid #e4ece6;
+    border-radius: 19px;
+    background: #fbfdfb;
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-3px);
+    border-color: #c5ded0;
+    box-shadow: 0 12px 24px rgba(32, 89, 63, .07);
+}
+
+.features-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
 }
 
 .features-title h2 { 
@@ -252,6 +461,8 @@ a {
     font-size: 14px; 
     font-weight: bold; 
     color: var(--primary-color); 
+    white-space: nowrap;
+    padding: 9px 0;
 }
 
 .features-link:hover { 
@@ -286,10 +497,14 @@ a {
 }
 
 /*  FOOTER  */
-footer { 
+footer {
+    max-width: 1320px;
+    width: calc(100% - 48px);
+    margin: 22px auto 0px;
+    padding: 23px 28px;
+    border-top: 1px solid rgb(224, 233, 227);
     display: flex; 
     justify-content: space-between; 
-    padding: 30px 5%; 
     font-size: 13px; 
     color: var(--text-muted); 
 }
@@ -303,7 +518,9 @@ footer {
     width: 100%;
     overflow: hidden;
     position: relative;
-    border-radius: 6px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .slider-track {

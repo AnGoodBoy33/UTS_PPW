@@ -1,21 +1,17 @@
 <?php
 $errors = [];
 
-// Deteksi browser: Firefox belum support -webkit-text-security, jadi di sana dipakai tipe password biasa[cite: 5]
-$pakaiSamarkan = stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Firefox') === false;
-
-// Siapkan kunci brankas buat enkripsi datanya nanti[cite: 5]
+// Siapkan kunci brankas buat enkripsi datanya nanti
 $kunci_sistem = "SelaRuangCeritaBersama2026!#$";
 $metode_aes   = "AES-256-CBC";
 $iv_aes       = substr(hash('sha256', $kunci_sistem), 0, 16);
 
-// Kalau form pendaftaran disubmit, jalankan cek isi datanya[cite: 5]
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama_lengkap = trim($_POST['fullname'] ?? '');
     $email = trim($_POST['mail'] ?? '');
     $password = $_POST['pswd'] ?? '';
+    $konfirmasi_sandi = $_POST['pswd_konfirmasi'] ?? '';
 
-    // Cek satu-satu isian form, kalau ada yang kosong atau salah format, kasih pesan error[cite: 5]
     if ($nama_lengkap === '') {
         $errors['fullname'] = 'Nama tidak boleh kosong!';
     }
@@ -32,45 +28,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['pswd'] = 'Password harus minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan simbol.';
     }
 
-    // Kalau semua isian form aman dan gak ada error, lanjut ke database[cite: 5]
+    if ($konfirmasi_sandi === '') {
+        $errors['pswd_konfirmasi'] = 'Konfirmasi kata sandi tidak boleh kosong!';
+    } elseif ($konfirmasi_sandi !== $password) {
+        $errors['pswd_konfirmasi'] = 'Konfirmasi kata sandi tidak sama dengan kata sandi.';
+    }
+
     if (empty($errors)) {
         include 'database.php';
 
-        // Pancing variabel database biar ga error (nilai default) kalau file database-nya masih kosong[cite: 5]
         if (!isset($account) || !is_array($account)) {
             $account = [];
         }
         if (!isset($menfess_data)) { $menfess_data = []; }
         if (!isset($reports_data)) { $reports_data = []; }
-        if (!isset($poll_data)) {
-            $poll_data = [
-                0 => ['id' => 1, 'opsi' => 'OOP (C++)', 'jumlah_vote' => 0],
-                1 => ['id' => 2, 'opsi' => 'Database', 'jumlah_vote' => 0],
-                2 => ['id' => 3, 'opsi' => 'Pemrograman Web', 'jumlah_vote' => 0],
-                3 => ['id' => 4, 'opsi' => 'Lainnya', 'jumlah_vote' => 0],
-            ];
-        }
 
-        // Enkripsi email dan nama sebelum dicek dan disimpan biar aman[cite: 5]
+        // Enkripsi email dan nama
         $email_aman = openssl_encrypt($email, $metode_aes, $kunci_sistem, 0, $iv_aes);
         $nama_aman  = openssl_encrypt($nama_lengkap, $metode_aes, $kunci_sistem, 0, $iv_aes);
 
-        // Cek dulu, jangan-jangan emailnya udah pernah kedaftar sebelumnya[cite: 5]
         if (isset($account[$email_aman]) || isset($account[$email])) {
             $errors['mail'] = 'Email sudah terdaftar. Silakan gunakan email lain.';
         } else {
-            // Kalau belum, simpan akun baru beserta password yang udah di-hash[cite: 5]
             $account[$email_aman] = [
                 "nama" => $nama_aman,
                 "password" => password_hash($password, PASSWORD_DEFAULT)
             ];
 
-            // Tulis ulang seluruh data ke dalam file database.php (termasuk post, polling, dll biar ga ilang)[cite: 5]
+            
             $kontenBaru = "<?php\n\n";
             $kontenBaru .= "\$account = " . var_export($account, true) . ";\n\n";
             $kontenBaru .= "\$menfess_data = " . var_export($menfess_data, true) . ";\n\n";
             $kontenBaru .= "\$reports_data = " . var_export($reports_data, true) . ";\n\n";
-            $kontenBaru .= "\$poll_data = " . var_export($poll_data, true) . ";\n";
 
             if (file_put_contents('database.php', $kontenBaru, LOCK_EX) !== false) {
                 header("Location: login.php?pesan=registrasi_sukses");
@@ -161,29 +150,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label for="pswd">Kata sandi</label>
                     <div class="pw-wrap">
-                        <input type="<?= $pakaiSamarkan ? 'text' : 'password' ?>"
+                        <input type="text"
                             id="pswd" name="pswd"
                             class="pw-field<?= isset($errors['pswd']) ? ' is-error' : '' ?>"
                             placeholder="Buat kata sandi"
                             autocomplete="new-password" autocapitalize="off" spellcheck="false" required>
 
-                        <?php if ($pakaiSamarkan): ?>
-                            <input type="checkbox" id="show-pw" class="pw-toggle" aria-label="Tampilkan kata sandi">
-                            <label for="show-pw" class="pw-eye" title="Tampilkan kata sandi">
-                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                    <path d="M2 12C4.5 7.5 8 5 12 5s7.5 2.5 10 7c-2.5 4.5-6 7-10 7S4.5 16.5 2 12z"/>
-                                    <circle cx="12" cy="12" r="3"/>
-                                    <path class="pw-slash" d="M3 3l18 18"/>
-                                </svg>
-                            </label>
-                        <?php endif; ?>
+                        <input type="checkbox" id="show-pw" class="pw-toggle" aria-label="Tampilkan kata sandi">
+                        <label for="show-pw" class="pw-eye" title="Tampilkan kata sandi">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M2 12C4.5 7.5 8 5 12 5s7.5 2.5 10 7c-2.5 4.5-6 7-10 7S4.5 16.5 2 12z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                                <path class="pw-slash" d="M3 3l18 18"/>
+                            </svg>
+                        </label>
                     </div>
-                    
+
                     <?php if (isset($errors['pswd'])): ?>
                         <span class="field-error"><?= htmlspecialchars($errors['pswd'], ENT_QUOTES, 'UTF-8') ?></span>
                     <?php endif; ?>
-                    
+
                     <small>Gunakan minimal 8 karakter, gabungkan huruf besar, huruf kecil, angka, dan simbol.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="pswd_konfirmasi">Konfirmasi kata sandi</label>
+                    <div class="pw-wrap">
+                        <input type="text"
+                            id="pswd_konfirmasi" name="pswd_konfirmasi"
+                            class="pw-field<?= isset($errors['pswd_konfirmasi']) ? ' is-error' : '' ?>"
+                            placeholder="Ulangi kata sandi"
+                            autocomplete="new-password" autocapitalize="off" spellcheck="false" required>
+
+                        <input type="checkbox" id="show-pw-konfirmasi" class="pw-toggle" aria-label="Tampilkan konfirmasi kata sandi">
+                        <label for="show-pw-konfirmasi" class="pw-eye" title="Tampilkan konfirmasi kata sandi">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M2 12C4.5 7.5 8 5 12 5s7.5 2.5 10 7c-2.5 4.5-6 7-10 7S4.5 16.5 2 12z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                                <path class="pw-slash" d="M3 3l18 18"/>
+                            </svg>
+                        </label>
+                    </div>
+
+                    <?php if (isset($errors['pswd_konfirmasi'])): ?>
+                        <span class="field-error"><?= htmlspecialchars($errors['pswd_konfirmasi'], ENT_QUOTES, 'UTF-8') ?></span>
+                    <?php endif; ?>
                 </div>
 
                 <button type="submit" class="submit-button">Daftar</button>

@@ -24,6 +24,8 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: 10px 15px 36px rgba(25, 67, 52, 0.12);
+    backdrop-filter: blur(34px);
 }
 
 .nav-left { 
@@ -56,47 +58,6 @@ body {
 .nav-link:hover { color: #1b4332; }
 .nav-link.active { color: #1b4332; font-weight: 600; border-bottom: 2px solid #1b4332; }
 
-.search-box {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: #f4f7f5;
-    padding: 9px 18px;
-    border-radius: 20px;
-    width: 380px;
-    border: 1px solid transparent;
-    transition: all 0.2s ease;
-}
-
-.search-box:focus-within {
-    background-color: #ffffff;
-    border-color: #1b4332;
-    box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.08);
-}
-
-.search-bar {
-    border: none;
-    background: transparent;
-    outline: none;
-    width: 100%;
-    font-size: 13px;
-    color: #2b3631;
-}
-
-.user-profile-nav {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #2b3631;
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 8px;
-    transition: background 0.2s ease;
-}
-
-.user-profile-nav:hover { background-color: #f4f7f5; }
 
 /* AVATAR */
 .avatar-small { 
@@ -183,10 +144,33 @@ body {
 
 /* SIDEBAR KIRI (STICKY) */
 .sidebar-left {
-    position: sticky;
-    top: 90px;
-    align-self: start; 
+  position: sticky;
+  top: 90px;
+  align-self: start;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border-top: 5px solid #005a43;
+  overflow: hidden;
+  margin-left: -115px;
+  width: 100%;
 }
+
+.sidebar-left::after {
+  content: "";
+  position: absolute;
+  bottom: -40px;
+  right: -40px;
+  width: 120px;
+  height: 120px;
+  background: #005a43;
+  filter: blur(25px);
+  opacity: 0.12;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
 
 .profile-header { 
     display: flex; 
@@ -290,7 +274,11 @@ body {
 }
 
 .btn-kirim { padding: 8px 24px; font-size: 13px; }
-
+/*Sisi tengah*/
+.feed-content{
+    width: 135%;
+    margin-left: -95px;
+}
 /* POST CARD FEED */
 .post-card { 
     padding: 22px; 
@@ -439,17 +427,17 @@ body {
     font-size: 14px; 
 }
 
-/* SIDEBAR KANAN (STICKY) */
-.sidebar-right {
-    position: sticky;
-    top: 90px;
-    align-self: start; 
-}
+/* SIDEBAR KANAN*/
+
 .widget-card { 
     background-color: #e8eee9; 
     border: none; 
     border-radius: 14px; 
     padding: 20px; 
+}
+.card.widget-card{
+    margin-left: 115px;
+    width: 100%;
 }
 .widget-header { 
     display: flex; 
@@ -467,47 +455,6 @@ body {
     color: #52635a; 
     margin-bottom: 18px; 
     line-height: 1.5; 
-}
-
-.poll-form { margin-bottom: 12px; }
-.poll-button { 
-    width: 100%; 
-    border: none; 
-    background: none; 
-    text-align: left; 
-    cursor: pointer; 
-    padding: 0; 
-}
-.poll-label { 
-    display: flex; 
-    justify-content: space-between; 
-    margin-bottom: 6px; 
-    font-size: 12.5px; 
-    font-weight: 500; 
-    color: #2b3631;
-    transition: color 0.2s ease; 
-}
-.poll-button:hover .poll-label { color: #1b4332; }
-
-.progress-bar { 
-    width: 100%; 
-    background: #ffffff; 
-    border-radius: 6px; 
-    height: 7px; 
-    overflow: hidden; 
-}
-.progress { 
-    background-color: #1b4332; 
-    height: 100%; 
-    border-radius: 6px; 
-    transition: width 0.3s ease; 
-}
-.poll-total { 
-    font-size: 11px; 
-    color: #73827a; 
-    margin-top: 16px; 
-    padding-top: 12px; 
-    border-top: 1px solid #d4dfd7; 
 }
 
 .info-list { list-style: none; }
@@ -701,6 +648,7 @@ body {
     width: 380px;
     border: 1px solid #e5ebe7;
     overflow: hidden; 
+    margin-left: -200px;
 }
 
 .quote-slider-viewport {

@@ -121,7 +121,6 @@
                     return $b['waktu'] <=> $a['waktu'];
                 });
                 $kandidat = array_slice($kandidat, 0, 3);
-                $waktu_terakhir = !empty($kandidat) ? $kandidat[0]['waktu'] : null;
 
                 $tampil = [];
                 foreach ($kandidat as $post) {
@@ -177,7 +176,7 @@
                                         </span>
                                         <span class="card-date"><?= $item['tanggal'] ?></span>
                                     </div>
-                                    <p><?= nl2br(sela_aman($item['pesan'])) ?></p>
+                                    <p><?= nl2br(sela_aman($item['pesan'])) ?></p> 
                                     <hr>
                                     
                                     <!-- Info orang yang ngepost di paling bawah kartu -->
@@ -207,7 +206,7 @@
                     <span class="slider-dot dot-2"></span>
                     <span class="slider-dot dot-3"></span>
                 </div>
-                <p class="card-caption"><i>Berbagi cerita kelas kini semudah ini.</i></p>
+                <p class="card-caption"><i>Cerita kecil bisa membuka percakapan baru.</i></p>
                 
             </div>
         </div>
